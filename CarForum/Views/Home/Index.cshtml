@@ -1,3 +1,30 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+<div class="reviews">
+    <h3>Отзывы</h3>
+    <div class="dropdown-container">
+        <div class="dropdown">
+            <label class="brand" for="brand">Бренд:</label>
+            <select id="brand" name="brand"></select>
+        </div>
+        <div class="dropdown">
+            <label class="model" for="model">Модель:</label>
+            <select id="model" name="model"></select>
+        </div>
+        <div class="dropdown">
+            <label class="year" for="year">Год:</label>
+            <select id="year" name="year"></select>
+        </div>
+        <div class="dropdown">
+            <label class="body_types" for="body_types">Кузов:</label>
+            <select id="body_types" name="body_types"></select>
+        </div>
+        <div class="dropdown">
+            <label class="transmission_types" for="transmission_types">Коробка передач:</label>
+            <select id="transmission_types" name="transmission_types"></select>
+        </div>
+    </div>
+    <button class="find">Искать отзыв</button>
+</div>

@@ -13,8 +13,28 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\body_types.json",
+      "PackagePath": "staticwebassets\\js\\body_types.json"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\cars.json",
+      "PackagePath": "staticwebassets\\js\\cars.json"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\selectcategories.js",
+      "PackagePath": "staticwebassets\\js\\selectcategories.js"
+    },
+    {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\transmission_types.json",
+      "PackagePath": "staticwebassets\\js\\transmission_types.json"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\years.json",
+      "PackagePath": "staticwebassets\\js\\years.json"
     },
     {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\lib\\bootstrap\\LICENSE",

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Автомобильный форум</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -9,24 +9,19 @@
 </head>
 <body>
     <header>
-        <a href="#">
+        <a asp-action="Index" asp-controller="Home">
             <p>Автомобильный форум</p>
             <img src="~/favicon.ico" alt="Site Icon">
         </a>
         <nav>
-            <form class="search-form">
-                <input type="text" placeholder="Поиск...">
-                <button type="submit">Найти</button>
-            </form>
             <ul>
-                <li><a href="#">Обзоры</a></li>
-                <li><a href="#">Новости</a></li>
+                <li><a href="#">Отзывы</a></li>
                 <li><a href="#">Контакты</a></li>
+                <li><a href="#">Помощь</a></li>
             </ul>
         </nav>
         <a href="#" class="user-link">Личный кабинет</a>
     </header>
-
     <main>
         @RenderBody()
     </main>
@@ -37,7 +32,7 @@
         </ul>
         <div class="copyright">&copy; 2024 Автомобильный Форум. Все права защищены.</div>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script asp-src-include="~/js/**/*.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
