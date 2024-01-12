@@ -18,10 +18,12 @@ const loadJsonData = async (jsonPath) => {
 };
 
 const addOption = (select, value) => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.text = value;
-    select.add(option);
+    if (select) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.text = value;
+        select.add(option);
+    }
 };
 
 const loadOptionsForSelect = async (select, jsonPath, key) => {
@@ -81,12 +83,18 @@ const fetchData = async () => {
             addOption(brandSelect, brand.name);
         });
 
-        brandSelect.addEventListener('change', async () => {
-            if (brandSelect.value !== selectedBrand) {
-                selectedBrand = brandSelect.value;
-                await updateModels(data);
-            }
-        });
+        const addBrandEventListener = () => {
+            brandSelect.addEventListener('change', async () => {
+                if (brandSelect.value !== selectedBrand) {
+                    selectedBrand = brandSelect.value;
+                    await updateModels(data);
+                }
+            });
+        };
+        
+        if (brandSelect) {
+            addBrandEventListener();
+        }
 
         modelSelect.addEventListener('change', async () => {
             await loadYears();
@@ -94,7 +102,7 @@ const fetchData = async () => {
 
         updateModels(data);
     } catch (error) {
-        console.error('Error loading JSON data:', error);
+        return;
     }
 };
 

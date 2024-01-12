@@ -1,26 +1,25 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Автомобильный форум</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/favicon.ico")" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <link rel="shortcut icon" type="image/ico" href="@Url.Content("~/favicon.ico")">
 </head>
 <body>
     <header>
-        <a asp-action="Index" asp-controller="Home">
-            <p>Автомобильный форум</p>
-            <img src="~/favicon.ico" alt="Site Icon">
-        </a>
+        <div class="logo">
+            <a asp-action="Index" asp-controller="Home" class="forum-link">На Главную</a>
+        </div>
         <nav>
-            <ul>
-                <li><a href="#">Отзывы</a></li>
-                <li><a href="#">Контакты</a></li>
-                <li><a href="#">Помощь</a></li>
-            </ul>
+            <a href="#" class="nav-link">Отзывы</a>
+            <a href="#" class="nav-link">Контакты</a>
+            <a href="#" class="nav-link">Помощь</a>
         </nav>
-        <a href="#" class="user-link">Личный кабинет</a>
+        <div class="user-panel">
+            <a asp-action="Login" asp-controller="Account" class="user-link">Личный кабинет</a>
+        </div>
     </header>
     <main>
         @RenderBody()
