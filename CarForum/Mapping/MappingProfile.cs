@@ -9,8 +9,8 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<RegisterViewModel, User>()
-                .ForMember(x => x.Email, opt => opt.MapFrom(c => c.Email))
-                .ForMember(x => x.UserName, opt => opt.MapFrom(c => c.Login));
+                .ForMember(x => x.UserName, opt => opt.MapFrom(c => c.Login))
+                .ForMember(x => x.PhoneNumber, opt => opt.MapFrom(c => c.Phone));
 
         CreateMap<LoginViewModel, User>();
     }

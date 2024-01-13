@@ -9,12 +9,16 @@
     <form class="authorization-form" method="post" asp-action="Login" asp-controller="Account">
         <div asp-validation-summary="ModelOnly"></div>
         <div class="email-input">
-            <input class="data-input" asp-for="Email" />
-            <span class="data-span" asp-validation-for="Email"></span>
+            <input class="data-input" asp-for="UserName" />
+            <span class="data-span" asp-validation-for="UserName"></span>
         </div>
         <div class="password-input">
             <input class="data-input" asp-for="Password" />
             <span class="data-span" asp-validation-for="Password"></span>
+        </div>
+        <div class="remember-me">
+            <input type="checkbox" asp-for="RememberMe" />
+            <label class="remember-me-label" asp-for="RememberMe">Запомнить меня</label>
         </div>
         <div>
             <input class="authorization-submit" type="submit" value="Войти" />

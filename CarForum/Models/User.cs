@@ -8,13 +8,9 @@ public class User : IdentityUser
 
     public string? LastName { get; set; }
 
-    public override string? UserName { get; set; }
-
     public override string? Email { get; set; }
 
-    public string? Phone { get; set; }
-
-    public string? Password { get; set; }
+    public override string? PhoneNumber { get; set; }
 
     public string? Country { get; set; }
 

@@ -16,7 +16,7 @@ public class RegisterViewModel
 
     [Required(ErrorMessage = "Поле Email обязательно для заполнения")]
     [EmailAddress]
-    [Display(Name = "Email", Prompt = "example.com")]
+    [Display(Name = "Email", Prompt = "Введите ваш email")]
     public string? Email { get; set; }
 
     [Required(ErrorMessage = "Поле Телефон обязательно для заполнения")]
@@ -54,7 +54,7 @@ public class RegisterViewModel
     [Required(ErrorMessage = "Поле Опыт вождения обязательно для заполнения")]
     [DataType(DataType.Text)]
     [Display(Name = "Опыт вождения", Prompt = "Введите ваш опыт вождения")]
-    public int DrivingExperienceYears { get; set; }
+    public double DrivingExperienceYears { get; set; }
 
     public DateTime RegistrationDate => DateTime.Now;
 

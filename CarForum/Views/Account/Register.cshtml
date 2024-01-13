@@ -4,6 +4,71 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.10/jquery.validate.unobtrusive.min.js"></script>
+<div class="registration">
+    <h4 class="registration-text">Регистрация</h4>
+    <form method="post" asp-action="Register" asp-controller="Account">
+        <div asp-validation-summary="ModelOnly"></div>
 
+        <div class="form-group">
+            <label class="register-label" asp-for="FirstName">Имя</label>
+            <input class="register-input" asp-for="FirstName"/>
+            <span class="rester-span" asp-validation-for="FirstName"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="LastName">Фамилия</label>
+            <input class="register-input" asp-for="LastName"/>
+            <span class="rester-span" asp-validation-for="LastName"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="Email">Email</label>
+            <input class="register-input" asp-for="Email"/>
+            <span class="rester-span" asp-validation-for="Email"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="Phone">Телефон</label>
+            <input class="register-input" asp-for="Phone"/>
+            <span class="rester-span" asp-validation-for="Phone"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="Password">Пароль</label>
+            <input class="register-input" asp-for="Password" type="password"/>
+            <span class="rester-span" asp-validation-for="Password"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="PasswordConfirm">Подтвердить пароль</label>
+            <input class="register-input" asp-for="PasswordConfirm" type="password"/>
+            <span class="rester-span" asp-validation-for="PasswordConfirm"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="Country">Страна</label>
+            <input class="register-input" asp-for="Country"/>
+            <span class="rester-span" asp-validation-for="Country"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="City">Город</label>
+            <input class="register-input" asp-for="City"/>
+            <span class="rester-span" asp-validation-for="City"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="BirthDay">День Рождения</label>
+            <input class="register-input" asp-for="BirthDay" type="date"/>
+            <span class="rester-span" asp-validation-for="BirthDay"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="register-label" asp-for="DrivingExperienceYears">Опыт вождения (в годах)</label>
+            <input class="register-input" asp-for="DrivingExperienceYears"/>
+            <span class="rester-span" asp-validation-for="DrivingExperienceYears"></span>
+        </div>
+
+        <button class="register-button" type="submit">Зарегистрироваться</button>
+    </form>
+</div>

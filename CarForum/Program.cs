@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 var mappingConfig = new MapperConfiguration(config => config.AddProfile(new MappingProfile()));
 
+builder.Services.AddMvc(options => options.SuppressAsyncSuffixInActionNames = false);
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton(mappingConfig.CreateMapper());
 builder.Services
