@@ -17,9 +17,9 @@ builder.Services
     .AddIdentity<User, IdentityRole>(options => {
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireLowercase = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireDigit = false;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireDigit = true;
         options.User.RequireUniqueEmail = false;
         options.SignIn.RequireConfirmedAccount = false;
     })

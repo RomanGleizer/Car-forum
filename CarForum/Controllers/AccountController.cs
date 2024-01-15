@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using CarForum.Extentions;
 using CarForum.Models;
 using CarForum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +27,34 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
         return View();
     }
 
+    [Authorize]
+    [HttpGet("UserProfile")]
+    public IActionResult UserProfile()
+    {
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        return View(currentUser);
+    }
+
+    [Authorize]
+    [HttpGet("EditProfile")]
+    public IActionResult EditProfile()
+    {
+        var currentUser = _userManager.GetUserAsync(User).Result;
+        var editViewModel = new EditViewModel
+        {
+            FirstName = currentUser.FirstName,
+            LastName = currentUser.LastName,
+            Email = currentUser.Email,
+            Phone = currentUser.PhoneNumber,
+            Country = currentUser.Country,
+            City = currentUser.City,
+            DrivingExperienceYears = currentUser.DrivingExperienceYears,
+            BirthDay = currentUser.BirthDay
+        };
+
+        return View(editViewModel);
+    }
+
     [HttpPost("Login")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
@@ -34,12 +64,15 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
             var user = _mapper.Map<User>(model);
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
 
-            if (result.Succeeded) 
-                return RedirectToAction("Личная страница пользователя", "Account");
+            if (result.Succeeded)
+            {
+                var fullUser = _userManager.FindByNameAsync(user.UserName).Result;
+                return RedirectToAction("UserProfile", "Account", fullUser);
+            }
             else
                 ModelState.AddModelError("", "Неправильный логин и (или) пароль");
         }
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login", model);
     }
 
     [HttpPost("Register")]
@@ -53,7 +86,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("Личная страница пользователя", "Home");
+                return RedirectToAction("UserProfile", "Account", user);
             }
             else
             {
@@ -61,6 +94,36 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
                     ModelState.AddModelError(string.Empty, error.Description);
             }
         }
-        return RedirectToAction("Index", "Home");
+
+        return View("Register", model);
+    }
+
+    [HttpPost("EditProfile")]
+    public async Task<IActionResult> EditProfile(EditViewModel model) 
+    {
+        if (ModelState.IsValid)
+        {
+            var user = await _userManager.FindByIdAsync(_userManager.GetUserAsync(User).Result.Id);
+            user.Convert(model);
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+                return RedirectToAction("UserProfile", "Account");
+            else
+                return RedirectToAction("EditProfile", "Account");
+        }
+        else
+        {
+            ModelState.AddModelError("", "Некорректные данные");
+            return View("Edit", model);
+        }
+    }
+
+    [HttpPost("Logout")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Login", "Account");
     }
 }

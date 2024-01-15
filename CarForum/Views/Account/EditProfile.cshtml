@@ -1,0 +1,62 @@
+﻿@model CarForum.ViewModels.EditViewModel
+
+@{
+    ViewData["Title"] = $"Изменить профиль";
+}
+
+<div class="edit">
+    <h4 class="edit-text">Редактирование профиля</h4>
+    <form method="post" asp-action="EditProfile" asp-controller="Account">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.FirstName">Имя</label>
+            <input class="edit-input" asp-for="@Model.FirstName" />
+            <span class="edit-span" asp-validation-for="@Model.FirstName"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.LastName">Фамилия</label>
+            <input class="edit-input" asp-for="@Model.LastName" />
+            <span class="edit-span" asp-validation-for="@Model.LastName"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Email">Email</label>
+            <input class="edit-input" asp-for="@Model.Email" />
+            <span class="edit-span" asp-validation-for="@Model.Email"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Phone">Телефон</label>
+            <input class="edit-input" asp-for="@Model.Phone" />
+            <span class="edit-span" asp-validation-for="@Model.Phone"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Country">Страна</label>
+            <input class="edit-input" asp-for="@Model.Country" />
+            <span class="edit-span" asp-validation-for="@Model.Country"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.City">Город</label>
+            <input class="edit-input" asp-for="@Model.City" />
+            <span class="edit-span" asp-validation-for="@Model.City"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.BirthDay">Дата рождения</label>
+            <input class="edit-input" asp-for="@Model.BirthDay" type="date" />
+            <span class="edit-span" asp-validation-for="@Model.BirthDay"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.DrivingExperienceYears">Опыт вождения (в годах)</label>
+            <input class="edit-input" asp-for="@Model.DrivingExperienceYears" />
+            <span class="edit-span" asp-validation-for="@Model.DrivingExperienceYears"></span>
+        </div>
+
+        <button class="edit-button" type="submit">Применить изменения</button>
+    </form>
+</div>

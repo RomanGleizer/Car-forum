@@ -1,0 +1,45 @@
+﻿@model CarForum.Models.User
+
+@{
+    ViewData["Title"] = $"Личный кабинет";
+}
+
+<div class="user-data">
+    <h2 class="profile-heading">Добро пожаловать в ваш личный кабинет, @Model.FirstName @Model.LastName!</h2>
+
+    <p class="profile-info">Имя: @Model.FirstName</p>
+    <p class="profile-info">Фамилия: @Model.LastName</p>
+    <p class="profile-info">Email: @Model.Email</p>
+    <p class="profile-info">Телефон: @Model.PhoneNumber</p>
+    <p class="profile-info">Страна: @Model.Country</p>
+    <p class="profile-info">Город: @Model.City</p>
+    <p class="profile-info">Дата рождения: @Model.BirthDay.ToShortDateString()</p>
+    <p class="profile-info">Дата регистрации: @Model.RegistrationDate.ToShortDateString()</p>
+    <p class="profile-info">Опыт вождения (в годах): @Model.DrivingExperienceYears</p>
+
+    <div class="button-container">
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="logout-button">Выход</button>
+        </form>
+        <a asp-action="EditProfile" asp-controller="Account" class="edit-profile-button">Редактировать</a>
+    </div>
+</div>
+
+<p class="user-reviews-title">Ваши отзывы</p>
+<div class="user-reviews">
+    <ul>
+        <li>
+            <div>
+                <a href="#">Название отзыва</a>
+                <p>Название автомобиля</p>
+                <p>Объем мотора</p>
+                <p>Количество лошадиных сил</p>
+                <p>Первые слова в объявлении</p>
+                <img alt="фотка машины" />
+                <p>Имя пользователя</p>
+                <p>Фамилия пользователя</p>
+                <p>Время публикации отзыва</p>
+            </div>
+        </li>
+    </ul>
+</div>

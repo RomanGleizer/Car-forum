@@ -47,14 +47,14 @@ public class RegisterViewModel
     public string? City { get; set; }
 
     [Required(ErrorMessage = "Поле День Рождения обязательно для заполнения")]
-    [DataType(DataType.Text)]
+    [DataType(DataType.DateTime)]
     [Display(Name = "День Рождения", Prompt = "Введите ваш день рождения")]
     public DateTime BirthDay { get; set; }
 
     [Required(ErrorMessage = "Поле Опыт вождения обязательно для заполнения")]
     [DataType(DataType.Text)]
     [Display(Name = "Опыт вождения", Prompt = "Введите ваш опыт вождения")]
-    public double DrivingExperienceYears { get; set; }
+    public int DrivingExperienceYears { get; set; }
 
     public DateTime RegistrationDate => DateTime.Now;
 
