@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarForum.Database;
 using CarForum.Extentions;
 using CarForum.Models;
 using CarForum.ViewModels;
@@ -9,11 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarForum.Controllers;
 
 [Route("api/{controller}")]
-public class AccountController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager) : Controller
+public class AccountController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext context) : Controller
 {
     private readonly IMapper _mapper = mapper;
     private readonly UserManager<User> _userManager = userManager;
     private readonly SignInManager<User> _signInManager = signInManager;
+    private readonly ApplicationDbContext _context = context;
 
     [HttpGet("Login")]
     public IActionResult Login()
@@ -32,6 +34,10 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     public IActionResult UserProfile()
     {
         var currentUser = _userManager.GetUserAsync(User).Result;
+        
+        if (currentUser is not null)
+            currentUser.Reviews = _context.Reviews.Where(r => r.Author.Email == currentUser.Email).ToList();
+
         return View(currentUser);
     }
 
@@ -40,19 +46,18 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     public IActionResult EditProfile()
     {
         var currentUser = _userManager.GetUserAsync(User).Result;
-        var editViewModel = new EditViewModel
-        {
-            FirstName = currentUser.FirstName,
-            LastName = currentUser.LastName,
-            Email = currentUser.Email,
-            Phone = currentUser.PhoneNumber,
-            Country = currentUser.Country,
-            City = currentUser.City,
-            DrivingExperienceYears = currentUser.DrivingExperienceYears,
-            BirthDay = currentUser.BirthDay
-        };
-
-        return View(editViewModel);
+        return View(
+            new EditViewModel
+            {
+                FirstName = currentUser.FirstName,
+                LastName = currentUser.LastName,
+                Email = currentUser.Email,
+                Phone = currentUser.PhoneNumber,
+                Country = currentUser.Country,
+                City = currentUser.City,
+                DrivingExperienceYears = currentUser.DrivingExperienceYears,
+                BirthDay = currentUser.BirthDay
+            });
     }
 
     [HttpPost("Login")]

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "o4axG5GgcOMKko+GtagKoNYiVg0T1P2lNNBPXy9mXq8=",
+  "Hash": "mnyBcx3mbeOgHs3DCQTZdJ7XJQo57e/XDCtvSRsEbJ4=",
   "Source": "CarForum",
   "BasePath": "_content/CarForum",
   "Mode": "Default",
@@ -1288,6 +1288,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Identity": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\a22c4f72-cbdc-4792-b684-65216b84704c_hyundai.jpg",
+      "SourceId": "CarForum",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\",
+      "BasePath": "_content/CarForum",
+      "RelativePath": "uploads/a22c4f72-cbdc-4792-b684-65216b84704c_hyundai.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\a22c4f72-cbdc-4792-b684-65216b84704c_hyundai.jpg"
     }
   ]
 }

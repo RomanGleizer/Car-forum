@@ -1,4 +1,5 @@
 ﻿@model CarForum.Models.User
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment WebHostEnvironment
 
 @{
     ViewData["Title"] = $"Личный кабинет";
@@ -27,19 +28,21 @@
 
 <p class="user-reviews-title">Ваши отзывы</p>
 <div class="user-reviews">
-    <ul>
-        <li>
-            <div>
-                <a href="#">Название отзыва</a>
-                <p>Название автомобиля</p>
-                <p>Объем мотора</p>
-                <p>Количество лошадиных сил</p>
-                <p>Первые слова в объявлении</p>
-                <img alt="фотка машины" />
-                <p>Имя пользователя</p>
-                <p>Фамилия пользователя</p>
-                <p>Время публикации отзыва</p>
-            </div>
-        </li>
+    <ul id="userReviewsList">
+        @foreach (var review in Model.Reviews)
+        {
+            <li>
+                <strong>@review.Title</strong>
+                <p>Рейтинг: @review.Rating</p>
+                <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                <a asp-action="" asp-controller="" class="more-info">Подробнее</a>
+                <a asp-action="" asp-controller="" class="review-edit">Редактировать</a>
+                @if (!string.IsNullOrEmpty(review.PhotoPath))
+                {
+                    <img src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                }
+            </li> 
+        }
     </ul>
 </div>

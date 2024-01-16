@@ -13,5 +13,6 @@ public class MappingProfile : Profile
                 .ForMember(x => x.PhoneNumber, opt => opt.MapFrom(c => c.Phone));
 
         CreateMap<LoginViewModel, User>();
+        CreateMap<CreateReviewViewModel, Review>();
     }
 }

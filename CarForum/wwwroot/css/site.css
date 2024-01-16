@@ -127,8 +127,13 @@ footer ul li {
     margin-left: 5px;
 }
 
+.reviews {
+    margin-top: 20px;
+    padding: 10px;
+}
+
 .reviews h3 {
-    padding: 20px 100px;
+    text-align: center;
     font-size: 1.7em;
     color: #333;
     font-family: 'Arial', sans-serif;
@@ -473,4 +478,144 @@ select {
     margin-top: 30px;
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+
+.user-reviews-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.user-reviews {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#userReviewsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#userReviewsList li {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+#userReviewsList li strong {
+    font-size: 18px;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#userReviewsList li p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.more-info,
+.review-edit {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff !important;
+    background-color: #3498db;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.more-info:hover,
+review-edit {
+    background-color: #2980b9;
+}
+
+.review-photo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.create-review {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 25px auto;
+}
+
+.create-review-text {
+    color: #333;
+    font-size: 24px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.form-group-label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-input input,
+.form-group-input textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.form-group-input input[type="file"] {
+    margin-top: 10px;
+}
+
+.form-group-span {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+.publish-review {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.publish-review:hover {
+    background-color: #45a049;
+}
+
+.form-control.form-group-big-textarea {
+    height: 350px; /* Выберите желаемую высоту */
 }

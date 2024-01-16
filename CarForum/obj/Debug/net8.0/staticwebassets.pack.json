@@ -265,6 +265,10 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\a22c4f72-cbdc-4792-b684-65216b84704c_hyundai.jpg",
+      "PackagePath": "staticwebassets\\uploads\\a22c4f72-cbdc-4792-b684-65216b84704c_hyundai.jpg"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CarForum.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

@@ -1,0 +1,111 @@
+﻿@model CarForum.ViewModels.CreateReviewViewModel
+
+@{
+    ViewData["Title"] = "Создать отзыв";
+}
+
+<div class="create-review">
+    <h4 class="create-review-text">Создать отзыв</h4>
+    <form class="review-form" asp-action="CreateReview" asp-controller="Review" method="post" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label asp-for="Title" class="form-group-label"></label>
+            <div class="form-group-input">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Rating" class="form-group-label"></label>
+            <div class="form-group-input">
+                <input asp-for="Rating" class="form-control" type="number" min="1" max="5" />
+                <span asp-validation-for="Rating" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CarBrand" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="brand" asp-for="CarBrand" class="form-control"></select>
+                <span asp-validation-for="CarBrand" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CarModel" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="model" asp-for="CarModel" class="form-control"></select>
+                <span asp-validation-for="CarModel" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Transmission" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="transmission_types" asp-for="Transmission" class="form-control"></select>
+                <span asp-validation-for="Transmission" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Body" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="body_types" asp-for="Body" class="form-control"></select>
+                <span asp-validation-for="Body" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Year" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="year" asp-for="Year" class="form-control"></select>
+                <span asp-validation-for="Year" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Mileage" class="form-group-label"></label>
+            <div class="form-group-input">
+                <input asp-for="Mileage" class="form-control" />
+                <span asp-validation-for="Mileage" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Advantages" class="form-group-label"></label>
+            <div class="form-group-input">
+                <textarea asp-for="Advantages" class="form-control"></textarea>
+                <span asp-validation-for="Advantages" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Disadvantages" class="form-group-label"></label>
+            <div class="form-group-input">
+                <textarea asp-for="Disadvantages" class="form-control"></textarea>
+                <span asp-validation-for="Disadvantages" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="OverallExperience" class="form-group-label"></label>
+            <div class="form-group-input">
+                <textarea asp-for="OverallExperience" class="form-control form-group-big-textarea"></textarea>
+                <span asp-validation-for="OverallExperience" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Photo" class="form-group-label"></label>
+            <div class="form-group-input">
+                <input asp-for="Photo" type="file" class="form-control-file" />
+                <span asp-validation-for="Photo" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="publish-review">Создать отзыв</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
