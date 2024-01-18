@@ -1,0 +1,27 @@
+﻿@model CarForum.Models.DeletedReview
+
+<div class="review-details">
+    <h3 class="details-review-header">Подробное описание удаленного отзыва про @Model.CarBrand @Model.CarModel</h3>
+    <strong class="details-review-title">@Model.Title</strong>
+    <p class="details-review-data">Рейтинг: @Model.Rating</p>
+    <p class="details-review-data">Год: @Model.Year</p>
+    <p class="details-review-data">Текущий пробег: @Model.Mileage км</p>
+    <p class="details-review-data">Коробка передач: @Model.Transmission</p>
+    <p class="details-review-data">Кузов: @Model.Body</p>
+    <p class="details-review-data">Тип двигателя: @Model.EngineType</p>
+    <p class="details-review-data">Объем двигателя: @Model.EngineCapacity</p>
+    <p class="details-review-data">Тип привода: @Model.DriveType</p>
+    <p class="details-review-data">Основные приемущества: @Model.Advantages</p>
+    <p class="details-review-data">Недостатки: @Model.Disadvantages</p>
+    <p class="details-review-data details-review-overall-experience">Общие впечатления: @Model.OverallExperience</p>
+    <p class="details-review-data">Опубликовано: @Model.PublishTime.ToShortDateString()</p>
+    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+    {
+        <img class="car-image" src="@Url.Content(Model.PhotoPath)" alt="Фотография авто" />
+    }
+
+    <div class="options">
+        <a asp-action="UserProfile" asp-controller="Account" class="more-info">Назад</a>
+        <a asp-action="Restore" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Восстановить</a>
+    </div>
+</div>

@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using CarForum.Database;
+using CarForum.Extentions;
 using CarForum.Models;
 using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarForum.Controllers;
 
@@ -20,49 +22,172 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     [HttpGet("CreateReview")]
     public IActionResult CreateReview() => View();
 
+    [Authorize]
+    [HttpGet("EditReview")]
+    public async Task<IActionResult> EditReview(int id)
+    {
+        var review = await GetReviewById(id);
+        if (review is null) return NotFound();
+
+        var model = _mapper.Map<EditReviewViewModel>(review);
+        return View(model);
+    }
+
+    [Authorize]
+    [HttpGet("Details/{id}")]
+    public async Task<IActionResult> Details(int id)
+    {
+        var review = await GetReviewById(id);
+        return ProcessReview(review);
+    }
+
+    [Authorize]
+    [HttpGet("DeletedReviewDetails/{id}")]
+    public async Task<IActionResult> DeletedReviewDetails(int id)
+    {
+        var review = await GetDeletedReviewById(id);
+        return ProcessReview(review);
+    }
+
+    [Authorize]
+    [HttpGet("DeleteReview/{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var review = await GetReviewById(id);
+        return ProcessReview(review);
+    }
+
+    [Authorize]
+    [HttpGet("RestoreReview/{id}")]
+    public async Task<IActionResult> Restore(int id)
+    {
+        var review = await GetDeletedReviewById(id);
+        return ProcessReview(review);
+    }
 
     [HttpPost("CreateReview")]
     public async Task<IActionResult> CreateReview(CreateReviewViewModel model)
     {
         if (ModelState.IsValid)
         {
-            var review = _mapper.Map<Review>(model);
-            var currentUser = await _userManager.GetUserAsync(User);
-
+            var currentUser = _userManager.GetUserAsync(User).Result;
             if (currentUser is not null)
             {
+                var review = _mapper.Map<Review>(model);
+                review.AuthorId = currentUser.Id;
                 review.Author = currentUser;
                 review.PhotoPath = SaveImage(model.Photo);
 
-                currentUser.Reviews.Add(review);
-
                 _context.Reviews.Add(review);
                 await _context.SaveChangesAsync();
-                await _userManager.UpdateAsync(currentUser);
 
                 return RedirectToAction("UserProfile", "Account");
             }
-            else
-            {
-                ModelState.AddModelError("", "Пользователя не существует");
-            }
+            else ModelState.AddModelError("", "Пользователя не существует");
         }
-        else
-        {
-            ModelState.AddModelError("", "Ошибка при заполнении данных");
-        }
+        else ModelState.AddModelError("", "Ошибка при заполнении данных");
 
         return View();
     }
 
+    [HttpPost("EditReview")]
+    public async Task<IActionResult> EditReview(EditReviewViewModel model, int id)
+    {
+        if (ModelState.IsValid)
+        {
+            var review = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+            if (review is not null)
+            {
+                var currentUser = _userManager.GetUserAsync(User).Result;
+                if (currentUser.Id == review.Author.Id)
+                {
+                    review.Convert(model);
+                    if (model.Photo is not null)
+                        review.PhotoPath = SaveImage(model.Photo);
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("UserProfile", "Account");
+                }
+                else return NotFound();
+    
+            }
+            else ModelState.AddModelError("", "Отзыва не существует");
+        }
+        else ModelState.AddModelError("", "Ошибка при изменении данных");
+
+        return View();
+    }
+
+    [HttpPost("DeleteReview/{id}")]
+    public Task<IActionResult> DeleteReview(int id) =>
+        ManageReview(id, async review =>
+        {
+            var deletedReview = new DeletedReview
+            {
+                Title = review.Title,
+                Rating = review.Rating,
+                CarBrand = review.CarBrand,
+                CarModel = review.CarModel,
+                Year = review.Year,
+                Mileage = review.Mileage,
+                Transmission = review.Transmission,
+                Body = review.Body,
+                EngineType = review.EngineType,
+                EngineCapacity = review.EngineCapacity,
+                DriveType = review.DriveType,
+                Advantages = review.Advantages,
+                Disadvantages = review.Disadvantages,
+                OverallExperience = review.OverallExperience,
+                AuthorId = review.AuthorId,
+                Author = review.Author,
+                PhotoPath = review.PhotoPath,
+                PublishTime = review.PublishTime
+            };
+
+            _context.DeletedReviews.Add(deletedReview);
+            _context.Reviews.Remove(review);
+        });
+
+    [HttpPost("RestoreReview/{id}")]
+    public Task<IActionResult> RestoreReview(int id) =>
+        ManageReview(id, async review =>
+        {
+            var deletedReview = await _context.DeletedReviews.FindAsync(id);
+
+            if (deletedReview is not null)
+            {
+                var restoredReview = new Review
+                {
+                    Title = deletedReview.Title,
+                    Rating = deletedReview.Rating,
+                    CarBrand = deletedReview.CarBrand,
+                    CarModel = deletedReview.CarModel,
+                    Year = deletedReview.Year,
+                    Mileage = deletedReview.Mileage,
+                    Transmission = deletedReview.Transmission,
+                    Body = deletedReview.Body,
+                    EngineType = deletedReview.EngineType,
+                    EngineCapacity = deletedReview.EngineCapacity,
+                    DriveType = deletedReview.DriveType,
+                    Advantages = deletedReview.Advantages,
+                    Disadvantages = deletedReview.Disadvantages,
+                    OverallExperience = deletedReview.OverallExperience,
+                    AuthorId = deletedReview.AuthorId,
+                    Author = deletedReview.Author,
+                    PhotoPath = deletedReview.PhotoPath,
+                    PublishTime = deletedReview.PublishTime
+                };
+
+                _context.Reviews.Add(restoredReview);
+                _context.DeletedReviews.Remove(deletedReview);
+            }
+        });
     private string SaveImage(IFormFile photo)
     {
         if (photo != null && photo.Length > 0)
         {
             var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
-
             Directory.CreateDirectory(uploadsFolder);
-
             var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(photo.FileName);
             var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
@@ -73,5 +198,49 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         }
 
         return null;
+    }
+
+    private async Task<Review?> GetReviewById(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        return await _context.Reviews
+            .Where(r => user.Id == r.Author.Id && r.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    private async Task<DeletedReview?> GetDeletedReviewById(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        return await _context.DeletedReviews
+            .Where(r => user.Id == r.Author.Id && r.Id == id)
+            .FirstOrDefaultAsync();
+    }
+
+    private IActionResult ProcessReview<T>(T review) 
+        where T: class
+    {
+        if (review is null) return NotFound();
+        return View(review);
+    }
+
+    private async Task<IActionResult> ManageReview(int id, Func<Review, Task> action)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null)
+        {
+            ModelState.AddModelError("", "Такого пользователя нет");
+            return NotFound();
+        }
+
+        var review = await _context.Reviews.FindAsync(id);
+        if (review is null)
+        {
+            ModelState.AddModelError("", "Отзыва не существует");
+            return NotFound();
+        }
+
+        await action(review);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("UserProfile", "Account");
     }
 }

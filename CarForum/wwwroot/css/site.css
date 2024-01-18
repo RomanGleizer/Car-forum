@@ -522,7 +522,8 @@ select {
 }
 
 .more-info,
-.review-edit {
+.review-edit,
+.submit-edit-changes {
     display: inline-block;
     margin-top: 15px;
     padding: 10px 15px;
@@ -536,7 +537,8 @@ select {
 }
 
 .more-info:hover,
-review-edit {
+review-edit,
+.submit-edit-changes {
     background-color: #2980b9;
 }
 
@@ -617,5 +619,124 @@ review-edit {
 }
 
 .form-control.form-group-big-textarea {
-    height: 350px; /* Выберите желаемую высоту */
+    height: 350px;
 }
+
+.car-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.options {
+    text-align: center;
+}
+
+.review-details {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.details-review-header {
+    font-size: 1.5em;
+    color: #333;
+}
+
+.details-review-title {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #007bff;
+}
+
+.details-review-data {
+    margin: 8px 0;
+    font-size: 1em;
+    color: #555;
+}
+
+.details-review-data.important {
+    font-weight: bold;
+    color: #121111;
+}
+
+.details-review-overall-experience {
+    font-weight: bold;
+    color: #000000;
+}
+
+.car-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.delete-review-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.return-back-from-delete-menu,
+.delete-review-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.return-back-from-delete-menu, .delete-review-button {
+    background-color: #3498db;
+}
+
+.return-back-from-delete-menu:hover {
+    background-color: #2980b9;
+}
+
+
+.delete-review-button:hover {
+    background-color: #2980b9;
+}
+.edit-review-buttons {
+    text-align: center;
+    margin: 20px;
+}
+
+.submit-edit-changes,
+.return-back-from-edit-menu {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-edit-changes {
+    background-color: #3498db;
+}
+
+.submit-edit-changes:hover {
+    background-color: #2980b9;
+}
+
+.return-back-from-edit-menu {
+    margin-left: 10px;
+    background-color: #3498db;
+}
+
+.return-back-from-edit-menu:hover {
+    background-color: #2980b9;
+}
+

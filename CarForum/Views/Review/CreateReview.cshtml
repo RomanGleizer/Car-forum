@@ -57,6 +57,30 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="EngineType" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="engine_types" asp-for="EngineType" class="form-control"></select>
+                <span asp-validation-for="EngineType" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DriveType" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="drive_types" asp-for="DriveType" class="form-control"></select>
+                <span asp-validation-for="DriveType" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="EngineCapacity" class="form-group-label"></label>
+            <div class="form-group-input">
+                <select id="engine_capacity" asp-for="EngineCapacity" class="form-control"></select>
+                <span asp-validation-for="EngineCapacity" class="text-danger form-group-span"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label asp-for="Year" class="form-group-label"></label>
             <div class="form-group-input">
                 <select id="year" asp-for="Year" class="form-control"></select>

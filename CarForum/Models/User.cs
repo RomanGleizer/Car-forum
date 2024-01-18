@@ -24,5 +24,7 @@ public class User : IdentityUser
 
     public List<Review> Reviews { get; set; } = new List<Review>();
 
+    public List<DeletedReview> DeletedReviews { get; set; } = new List<DeletedReview>();
+
     public List<Comment> Comments { get; set; } = new List<Comment>();
 }

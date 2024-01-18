@@ -14,5 +14,6 @@ public class MappingProfile : Profile
 
         CreateMap<LoginViewModel, User>();
         CreateMap<CreateReviewViewModel, Review>();
+        CreateMap<EditReviewViewModel, Review>();
     }
 }

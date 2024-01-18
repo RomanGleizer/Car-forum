@@ -2,7 +2,7 @@
 
 namespace CarForum.ViewModels;
 
-public class EditViewModel
+public class EditProfileViewModel
 {
     [DataType(DataType.Text)]
     [Display(Name = "Имя", Prompt = "Имя")]

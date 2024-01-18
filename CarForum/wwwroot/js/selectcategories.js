@@ -3,7 +3,12 @@ const modelSelect = document.getElementById("model");
 const yearSelect = document.getElementById("year");
 const transmissionSelect = document.getElementById("transmission_types");
 const bodySelect = document.getElementById("body_types");
-const carsDataPath = '/js/cars.json';
+const driveTypes = document.getElementById("drive_types");
+const engineTypes = document.getElementById("engine_types");
+const engineCapacity = document.getElementById("engine_capacity");
+
+const modelsDataPath = '/js/models.json';
+const brandsDataPath = '/js/brands.json';
 
 let selectedBrand;
 
@@ -29,36 +34,47 @@ const addOption = (select, value) => {
 const loadOptionsForSelect = async (select, jsonPath, key) => {
     const data = await loadJsonData(jsonPath);
 
-    if (data && data[key]) {
+    if (data) {
         select.innerHTML = "";
-        data[key].forEach(item => {
-            addOption(select, item);
+        data.forEach(item => {
+            addOption(select, item[key]);
         });
     }
 };
-
 const updateModels = async (data) => {
     const selectedBrand = brandSelect.value;
     modelSelect.options.length = 0;
 
-    const selectedBrandData = data?.brands.find(brand => brand.name === selectedBrand);
+    const selectedBrandData = data[selectedBrand];
 
     if (selectedBrandData) {
-        selectedBrandData.models.forEach(model => {
+        selectedBrandData.forEach(model => {
             addOption(modelSelect, model);
         });
 
         if (modelSelect.value !== "") {
             await loadYears();
 
-            fetch('/js/transmission_types.json')
-                .then(response => response.json())
-                .then(data => populateDropdown('transmission_types', data));
+            const transmissionData = await loadJsonData('/js/transmission_types.json');
+            const bodyData = await loadJsonData('/js/body_types.json');
+            const engineTypeData = await loadJsonData('/js/engine_types.json'); 
+            const engineCapacityData = await loadJsonData('/js/engine_capacity.json'); 
+            const driveTypeData = await loadJsonData('/js/drive_types.json'); 
 
-            fetch('/js/body_types.json')
-                .then(response => response.json())
-                .then(data => populateDropdown('body_types', data));
+            populateDropdown('transmission_types', transmissionData);
+            populateDropdown('body_types', bodyData);
+            populateDropdown('drive_types', driveTypeData);
+            populateDropdown('engine_types', engineTypeData);
+            populateDropdown('engine_capacity', engineCapacityData);
         }
+    } else {
+        modelSelect.options.length = 0;
+        yearSelect.options.length = 0;
+        transmissionSelect.options.length = 0;
+        bodySelect.options.length = 0;
+        driveTypes.options.length = 0;
+        engineTypes.options.length = 0;
+        engineCapacity.options.length = 0;
     }
 };
 
@@ -76,33 +92,29 @@ const loadYears = async () => {
 
 const fetchData = async () => {
     try {
-        const response = await fetch(carsDataPath);
-        const data = await response.json();
+        const brandsData = await loadJsonData(brandsDataPath);
+        const modelsData = await loadJsonData(modelsDataPath);
 
-        data.brands.forEach(brand => {
-            addOption(brandSelect, brand.name);
-        });
+        if (brandsData && modelsData && brandSelect) {
+            brandsData.forEach(brand => {
+                addOption(brandSelect, brand.name);
+            });
 
-        const addBrandEventListener = () => {
             brandSelect.addEventListener('change', async () => {
                 if (brandSelect.value !== selectedBrand) {
                     selectedBrand = brandSelect.value;
-                    await updateModels(data);
+                    await updateModels(modelsData);
                 }
             });
-        };
-        
-        if (brandSelect) {
-            addBrandEventListener();
+
+            modelSelect.addEventListener('change', async () => {
+                await loadYears();
+            });
+
+            updateModels(modelsData);
         }
-
-        modelSelect.addEventListener('change', async () => {
-            await loadYears();
-        });
-
-        updateModels(data);
     } catch (error) {
-        return;
+        console.error(error);
     }
 };
 
@@ -111,7 +123,7 @@ function populateDropdown(selectId, data) {
 
     data.forEach(option => {
         const optionElement = document.createElement('option');
-        optionElement.value = option.id;
+        optionElement.value = option.name;
         optionElement.textContent = option.name;
         select.appendChild(optionElement);
     });

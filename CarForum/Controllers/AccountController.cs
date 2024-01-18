@@ -31,33 +31,27 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
 
     [Authorize]
     [HttpGet("UserProfile")]
-    public IActionResult UserProfile()
+    public async Task<IActionResult> UserProfile()
     {
-        var currentUser = _userManager.GetUserAsync(User).Result;
-        
+        var currentUser = await _userManager.GetUserAsync(User);
+
         if (currentUser is not null)
-            currentUser.Reviews = _context.Reviews.Where(r => r.Author.Email == currentUser.Email).ToList();
+        {
+            currentUser.DeletedReviews = _context.DeletedReviews.Where(r => r.Author.Id == currentUser.Id).ToList();
+            currentUser.Reviews = _context.Reviews.Where(r => r.Author.Id == currentUser.Id).ToList();
+        }
 
         return View(currentUser);
     }
 
     [Authorize]
     [HttpGet("EditProfile")]
-    public IActionResult EditProfile()
+    public async Task<IActionResult> EditProfile()
     {
-        var currentUser = _userManager.GetUserAsync(User).Result;
-        return View(
-            new EditViewModel
-            {
-                FirstName = currentUser.FirstName,
-                LastName = currentUser.LastName,
-                Email = currentUser.Email,
-                Phone = currentUser.PhoneNumber,
-                Country = currentUser.Country,
-                City = currentUser.City,
-                DrivingExperienceYears = currentUser.DrivingExperienceYears,
-                BirthDay = currentUser.BirthDay
-            });
+        var currentUser = await _userManager.GetUserAsync(User);
+        var model = _mapper.Map<EditProfileViewModel>(currentUser);
+
+        return View(model);
     }
 
     [HttpPost("Login")]
@@ -70,14 +64,11 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
 
             if (result.Succeeded)
-            {
-                var fullUser = _userManager.FindByNameAsync(user.UserName).Result;
-                return RedirectToAction("UserProfile", "Account", fullUser);
-            }
+                return RedirectToAction("UserProfile", "Account");
             else
                 ModelState.AddModelError("", "Неправильный логин и (или) пароль");
         }
-        return RedirectToAction("Login", model);
+        return View(model);
     }
 
     [HttpPost("Register")]
@@ -87,41 +78,44 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
         {
             var user = _mapper.Map<User>(model);
             var result = await _userManager.CreateAsync(user, model.Password);
-            
+
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("UserProfile", "Account", user);
+                return RedirectToAction("UserProfile", "Account");
             }
             else
-            {
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);
-            }
         }
 
         return View("Register", model);
     }
 
     [HttpPost("EditProfile")]
-    public async Task<IActionResult> EditProfile(EditViewModel model) 
+    public async Task<IActionResult> EditProfile(EditProfileViewModel model)
     {
         if (ModelState.IsValid)
         {
             var user = await _userManager.FindByIdAsync(_userManager.GetUserAsync(User).Result.Id);
-            user.Convert(model);
+            if (user is not null)
+            {
+                _mapper.Map(model, user);
+                var result = await _userManager.UpdateAsync(user);
 
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
-                return RedirectToAction("UserProfile", "Account");
+                if (result.Succeeded)
+                    return RedirectToAction("UserProfile", "Account");
+                else
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError(string.Empty, error.Description);
+            }
             else
-                return RedirectToAction("EditProfile", "Account");
+                return NotFound();
         }
         else
-        {
             ModelState.AddModelError("", "Некорректные данные");
-            return View("Edit", model);
-        }
+
+        return View("EditProfile", model);
     }
 
     [HttpPost("Logout")]

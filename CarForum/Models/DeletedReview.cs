@@ -1,6 +1,6 @@
 ﻿namespace CarForum.Models;
 
-public class Review
+public class DeletedReview
 {
     public int Id { get; set; }
 

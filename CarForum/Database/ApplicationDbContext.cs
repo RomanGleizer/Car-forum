@@ -11,6 +11,8 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     public DbSet<Review> Reviews { get; set; }
 
+    public DbSet<DeletedReview> DeletedReviews { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         Database.EnsureCreated();
@@ -19,6 +21,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<Review>()
+            .HasOne(r => r.Author)
+            .WithMany(u => u.Reviews)
+            .HasForeignKey(r => r.AuthorId);
+
+        builder.Entity<DeletedReview>()
+            .Property(r => r.Id)
+            .ValueGeneratedOnAdd();
+
         base.OnModelCreating(builder);
     }
 }

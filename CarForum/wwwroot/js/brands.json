@@ -1,0 +1,21 @@
+[
+  { "name": "Пусто" },
+  { "name": "Audi" },
+  { "name": "BMW" },
+  { "name": "Ford" },
+  { "name": "Honda" },
+  { "name": "Kia" },
+  { "name": "Lada(ВАЗ)" },
+  { "name": "Mazda" },
+  { "name": "Mercedes-Benz" },
+  { "name": "Mitsubishi" },
+  { "name": "Nissan" },
+  { "name": "Renault" },
+  { "name": "Skoda" },
+  { "name": "Toyota" },
+  { "name": "Volkswagen" },
+  { "name": "Chevrolet" },
+  { "name": "Daewoo" },
+  { "name": "Volvo" },
+  { "name": "Tesla" }
+]

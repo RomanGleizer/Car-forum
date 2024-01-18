@@ -5,7 +5,7 @@ namespace CarForum.Extentions;
 
 public static class UserExtentionMethods
 {
-    public static User Convert(this User user, EditViewModel model)
+    public static User Convert(this User user, EditProfileViewModel model)
     {
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;

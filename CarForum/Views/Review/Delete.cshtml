@@ -1,0 +1,16 @@
+﻿@model CarForum.Models.Review
+
+<div class="review-details">
+    <h3 class="details-review-header">Вы действительно хотите удалить отзыв про @Model.CarBrand @Model.CarModel?</h3>
+    <strong class="details-review-title">@Model.Title</strong>
+    @if (!string.IsNullOrEmpty(Model.PhotoPath))
+    {
+        <img class="car-image" src="@Url.Content(Model.PhotoPath)" alt="Фотография авто" />
+    }
+    <div class="delete-review-container">
+        <form method="post" asp-action="DeleteReview" asp-controller="Review">
+            <a asp-action="UserProfile" asp-controller="Account" class="return-back-from-delete-menu">Назад</a>
+            <button class="delete-review-button" type="submit" asp-route-id="@Model.Id">Удалить</button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+﻿@model CarForum.ViewModels.EditReviewViewModel
+
+@{
+    ViewData["Title"] = "Редактирование отзыва";
+}
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<div class="edit">
+    <h4 class="edit-text">Редактирование отзыва про @Model.CarBrand @Model.CarModel @Model.Year</h4>
+    <form method="post" asp-action="EditReview" asp-controller="Review" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Title">Название отзыва</label>
+            <input class="edit-input" asp-for="@Model.Title" />
+            <span class="edit-span" asp-validation-for="@Model.Title"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Rating">Рейтинг</label>
+            <input class="edit-input" asp-for="@Model.Rating" />
+            <span class="edit-span" asp-validation-for="@Model.Rating"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.CarBrand">Марка автомобиля</label>
+            <select id="edit_brand" asp-for="@Model.CarBrand" class="edit-input">
+                <option value="@Model.CarBrand">@Model.CarBrand</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.CarBrand"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.CarModel">Модель</label>
+            <select id="edit_model" asp-for="@Model.CarModel" class="edit-input">
+                <option value="@Model.CarModel">@Model.CarModel</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.CarModel"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Transmission">Коробка передач</label>
+            <select id="edit_transmission_types" asp-for="@Model.Transmission" class="edit-input">
+                <option value="@Model.Transmission">@Model.Transmission</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Transmission"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Body">Тип кузова</label>
+            <select id="edit_body_types" asp-for="@Model.Body" class="edit-input">
+                <option value="@Model.Body">@Model.Body</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Body"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.EngineType">Год производства</label>
+            <select id="edit_engine_types" asp-for="@Model.EngineType" class="edit-input">
+                <option value="@Model.EngineType">@Model.EngineType</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Year"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.DriveType">Год производства</label>
+            <select id="edit_drives_types" asp-for="@Model.DriveType" class="edit-input">
+                <option value="@Model.EngineType">@Model.DriveType</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Year"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.EngineCapacity">Год производства</label>
+            <select id="edit_engine_capacity" asp-for="@Model.EngineCapacity" class="edit-input">
+                <option value="@Model.EngineCapacity">@Model.EngineCapacity</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Year"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Year">Год производства</label>
+            <select id="edit_year" asp-for="@Model.Year" class="edit-input">
+                <option value="@Model.Year">@Model.Year</option>
+            </select>
+            <span class="edit-span" asp-validation-for="@Model.Year"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Mileage">Пробег</label>
+            <input class="edit-input" asp-for="@Model.Mileage" />
+            <span class="edit-span" asp-validation-for="@Model.Mileage"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Advantages">Приемущества</label>
+            <input class="edit-input" asp-for="@Model.Advantages" />
+            <span class="edit-span" asp-validation-for="@Model.Advantages"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.Disadvantages">Недостатки</label>
+            <input class="edit-input" asp-for="@Model.Disadvantages" />
+            <span class="edit-span" asp-validation-for="@Model.Disadvantages"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="edit-label" asp-for="@Model.OverallExperience">Общие впечатления</label>
+            <div class="form-group-input">
+                <textarea class="form-control form-group-big-textarea" asp-for="@Model.OverallExperience"></textarea>
+                <span class="edit-span" asp-validation-for="@Model.OverallExperience"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Photo" class="edit-label"></label>
+            <div class="form-group-input">
+                @if (!string.IsNullOrEmpty(Model.PhotoPath))
+                {
+                    <img src="@Model.PhotoPath" alt="Current Photo" class="current-photo" />
+                }
+                <input asp-for="Photo" type="file" class="edit-input" />
+                <span asp-validation-for="Photo" class="edit-span"></span>
+            </div>
+        </div>
+
+        <div class="edit-review-buttons">
+            <button class="submit-edit-changes" type="submit" asp-route-id="@Model.Id">Применить изменения</button>
+            <a asp-action="UserProfile" asp-controller="Account" class="return-back-from-edit-menu">Назад</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    async function loadJSON(url) {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    }
+
+    const carBrandsPromise = loadJSON('/js/brands.json');
+    const transmissionsPromise = loadJSON('/js/transmission_types.json');
+    const bodyTypesPromise = loadJSON('/js/body_types.json');
+    const carModelsPromise = loadJSON('/js/models.json');
+    const yearsPromise = loadJSON('/js/years.json');
+    const driveTypesPromise = loadJSON('/js/drive_types.json');
+    const engineCapacityPromise = loadJSON('/js/engine_capacity.json');
+    const engineTypesPromise = loadJSON('/js/engine_types.json');
+
+    function populateSelect(selectId, data) {
+        var select = document.getElementById(selectId);
+
+        data.forEach(function (item) {
+            var option = document.createElement("option");
+            option.value = item.name;
+            option.text = item.name;
+
+            select.add(option);
+        });
+    }
+
+    function updateModels(initialModel) {
+        var selectedBrand = document.getElementById("edit_brand").value;
+        var models = carModels[selectedBrand] || [];
+
+        var modelSelect = document.getElementById("edit_model");
+        modelSelect.innerHTML = "";
+
+        models.forEach(function (model) {
+            var option = document.createElement("option");
+            option.value = model;
+            option.text = model;
+
+            modelSelect.add(option);
+        });
+
+        modelSelect.value = initialModel;
+    }
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        const [carBrands, transmissions, bodyTypes, carModels, years, driveTypes, engineCapacity, engineTypes] = await Promise.all([
+            carBrandsPromise,
+            transmissionsPromise,
+            bodyTypesPromise,
+            carModelsPromise,
+            yearsPromise,
+            driveTypesPromise,
+            engineCapacityPromise,
+            engineTypesPromise
+        ]);
+
+        populateSelect("edit_brand", carBrands);
+        populateSelect("edit_transmission_types", transmissions);
+        populateSelect("edit_body_types", bodyTypes);
+        populateSelect("edit_engine_types", engineTypes);
+        populateSelect("edit_drives_types", driveTypes);
+        populateSelect("edit_engine_capacity", engineCapacity);
+
+        var yearSelect = document.getElementById("edit_year");
+        years.years.forEach(function (year) {
+            var option = document.createElement("option");
+            option.value = year;
+            option.text = year;
+
+            yearSelect.add(option);
+        });
+
+        var initialModel = document.getElementById("edit_model").value;
+        updateModels(initialModel);
+        document.getElementById("edit_brand").addEventListener("change", function () {
+            updateModels(initialModel);
+        });
+
+        function updateModels(initialModel) {
+            var selectedBrand = document.getElementById("edit_brand").value;
+            var models = carModels[selectedBrand] || [];
+
+            var modelSelect = document.getElementById("edit_model");
+            modelSelect.innerHTML = "";
+
+            models.forEach(function (model) {
+                var option = document.createElement("option");
+                option.value = model;
+                option.text = model;
+
+                modelSelect.add(option);
+            });
+
+            modelSelect.value = initialModel;
+        }
+    });
+</script>
