@@ -1,5 +1,9 @@
 ﻿@model CarForum.Models.DeletedReview
 
+@{
+    ViewData["Title"] = "Восстановление отзыва";
+}
+
 <div class="review-details">
     <h3 class="details-review-header">Вы действительно хотите восстановить запись про @Model.CarBrand @Model.CarModel?</h3>
     @if (!string.IsNullOrEmpty(Model.PhotoPath))

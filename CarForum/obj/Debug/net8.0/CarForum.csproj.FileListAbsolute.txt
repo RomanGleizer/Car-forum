@@ -76,3 +76,6 @@ C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\obj\Debug\net8.0\ref
 C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\obj\Debug\net8.0\CarForum.pdb
 C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\obj\Debug\net8.0\CarForum.genruntimeconfig.cache
 C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\obj\Debug\net8.0\ref\CarForum.dll
+C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\bin\Debug\net8.0\MailKit.dll
+C:\Users\romy4\source\repos\RomanGleizer\Car-forum\CarForum\bin\Debug\net8.0\MimeKit.dll

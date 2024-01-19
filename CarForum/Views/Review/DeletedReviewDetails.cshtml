@@ -1,5 +1,9 @@
 ﻿@model CarForum.Models.DeletedReview
 
+@{
+    ViewData["Title"] = "Подробности удаленного отзыва";
+}
+
 <div class="review-details">
     <h3 class="details-review-header">Подробное описание удаленного отзыва про @Model.CarBrand @Model.CarModel</h3>
     <strong class="details-review-title">@Model.Title</strong>

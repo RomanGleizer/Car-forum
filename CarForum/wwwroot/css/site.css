@@ -740,3 +740,41 @@ review-edit,
     background-color: #2980b9;
 }
 
+.change-password-view {
+    max-width: 400px;
+    margin: 30px auto;
+}
+
+.change-password-form {
+    margin-top: 20px;
+}
+
+.change-password-form-group {
+    margin-bottom: 15px;
+}
+
+.change-password-form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.change-password-input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.change-password-submit {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+}
+
+.change-password-submit:hover {
+    background-color: #2980b9;
+}

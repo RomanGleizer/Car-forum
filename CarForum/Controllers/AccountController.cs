@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CarForum.Database;
-using CarForum.Extentions;
 using CarForum.Models;
+using CarForum.Services;
 using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +25,12 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
 
     [HttpGet("Register")]
     public IActionResult Register()
+    {
+        return View();
+    }
+
+    [HttpGet("ResetPassword")]
+    public IActionResult ResetPassword(string code = null)
     {
         return View();
     }
@@ -58,64 +64,55 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        if (ModelState.IsValid)
-        {
-            var user = _mapper.Map<User>(model);
-            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
+        if (!ModelState.IsValid) return View(model);
 
-            if (result.Succeeded)
-                return RedirectToAction("UserProfile", "Account");
-            else
-                ModelState.AddModelError("", "Неправильный логин и (или) пароль");
-        }
+        var user = _mapper.Map<User>(model);
+        var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
+
+        if (result.Succeeded)
+            return RedirectToAction("UserProfile", "Account");
+
         return View(model);
     }
 
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) return View(model);
+
+        var user = _mapper.Map<User>(model);
+        var result = await _userManager.CreateAsync(user, model.Password);
+
+        if (result.Succeeded)
         {
-            var user = _mapper.Map<User>(model);
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                return RedirectToAction("UserProfile", "Account");
-            }
-            else
-                foreach (var error in result.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
+            await _signInManager.SignInAsync(user, false);
+            return RedirectToAction("UserProfile", "Account");
         }
+        
+        foreach (var error in result.Errors)
+            ModelState.AddModelError(string.Empty, error.Description);
 
-        return View("Register", model);
+        return View(model);
     }
 
     [HttpPost("EditProfile")]
     public async Task<IActionResult> EditProfile(EditProfileViewModel model)
     {
-        if (ModelState.IsValid)
-        {
-            var user = await _userManager.FindByIdAsync(_userManager.GetUserAsync(User).Result.Id);
-            if (user is not null)
-            {
-                _mapper.Map(model, user);
-                var result = await _userManager.UpdateAsync(user);
+        if (!ModelState.IsValid) return View(model);
 
-                if (result.Succeeded)
-                    return RedirectToAction("UserProfile", "Account");
-                else
-                    foreach (var error in result.Errors)
-                        ModelState.AddModelError(string.Empty, error.Description);
-            }
-            else
-                return NotFound();
-        }
-        else
-            ModelState.AddModelError("", "Некорректные данные");
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return NotFound();
 
-        return View("EditProfile", model);
+        _mapper.Map(model, user);
+        var result = await _userManager.UpdateAsync(user);
+
+        if (result.Succeeded)
+            return RedirectToAction("UserProfile", "Account");
+        
+        foreach (var error in result.Errors)
+            ModelState.AddModelError(string.Empty, error.Description);
+
+        return View(model);
     }
 
     [HttpPost("Logout")]
@@ -124,5 +121,27 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Login", "Account");
+    }
+
+    [HttpPost("ResetPassword")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user is null)
+            return View(model);
+
+        var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+        if (result.Succeeded)
+            return View("UserProfile", user);
+
+        foreach (var error in result.Errors)
+            ModelState.AddModelError(string.Empty, error.Description);
+
+        return View(model);
     }
 }

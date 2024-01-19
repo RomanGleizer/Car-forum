@@ -15,6 +15,7 @@ builder.Services.AddSingleton(mappingConfig.CreateMapper());
 builder.Services
     .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection))
     .AddIdentity<User, IdentityRole>(options => {
+        options.Tokens.ProviderMap[TokenOptions.DefaultProvider] = new TokenProviderDescriptor(typeof(IUserTwoFactorTokenProvider<User>));
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireLowercase = true;
@@ -23,7 +24,8 @@ builder.Services
         options.User.RequireUniqueEmail = false;
         options.SignIn.RequireConfirmedAccount = false;
     })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 

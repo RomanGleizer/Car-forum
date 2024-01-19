@@ -1,5 +1,9 @@
 ﻿@model CarForum.Models.Review
 
+@{
+    ViewData["Title"] = "Подробности отзыва";
+}
+
 <div class="review-details">
     <h3 class="details-review-header">Подробное описание отзыва про @Model.CarBrand @Model.CarModel</h3>
     <strong class="details-review-title">@Model.Title</strong>

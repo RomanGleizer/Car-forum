@@ -85,9 +85,8 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
             }
             else ModelState.AddModelError("", "Пользователя не существует");
         }
-        else ModelState.AddModelError("", "Ошибка при заполнении данных");
 
-        return View();
+        return View(model);
     }
 
     [HttpPost("EditReview")]
@@ -113,9 +112,8 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
             }
             else ModelState.AddModelError("", "Отзыва не существует");
         }
-        else ModelState.AddModelError("", "Ошибка при изменении данных");
 
-        return View();
+        return View(model);
     }
 
     [HttpPost("DeleteReview/{id}")]
