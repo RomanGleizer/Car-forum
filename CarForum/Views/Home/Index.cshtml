@@ -2,29 +2,31 @@
     ViewData["Title"] = "Автомобильный форум";
 }
 
-<div class="reviews">
-    <h3>Отзывы</h3>
-    <div class="dropdown-container">
-        <div class="dropdown">
-            <label class="brand" for="brand">Бренд:</label>
-            <select id="brand" name="brand"></select>
-        </div>
-        <div class="dropdown">
-            <label class="model" for="model">Модель:</label>
-            <select id="model" name="model"></select>
-        </div>
-        <div class="dropdown">
-            <label class="year" for="year">Год:</label>
-            <select id="year" name="year"></select>
-        </div>
-        <div class="dropdown">
-            <label class="body_types" for="body_types">Кузов:</label>
-            <select id="body_types" name="body_types"></select>
-        </div>
-        <div class="dropdown">
-            <label class="transmission_types" for="transmission_types">Коробка передач:</label>
-            <select id="transmission_types" name="transmission_types"></select>
-        </div>
-    </div>
-    <button class="find">Искать отзыв</button>
+<div class="main-page">
+    <h3 class="main-page-title">Добро пожаловать! Ищите отзывы про интересующие вас автомбили.</h3>
+    <a asp-action="Search" asp-controller="Review" class="find-reviews">Найти отзывы</a>
+</div>
+<div class="random-cars">
+    <h3 class="random-cars-title">Вам могут быть инетересны</h3>
+    <ul class="random-cars-revies" id="userReviewsList">
+        @if (ViewBag.RandomReviews is not null)
+        {
+            @foreach (var review in ViewBag.RandomReviews)
+            {
+                <li>
+                    <strong>@review.Title</strong>
+                    <p>Рейтинг: @(review.Rating ?? 0)</p>
+                    <p>Автомобиль: @(review.CarBrand ?? "") @(review.CarModel ?? "")</p>
+                    <p>Опубликовано: @(review.PublishTime?.ToShortDateString() ?? "")</p>
+                    <div class="options">
+                        <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.PhotoPath))
+                    {
+                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                    }
+                </li>
+            }
+        }
+    </ul>
 </div>

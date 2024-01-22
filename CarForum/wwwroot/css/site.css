@@ -359,6 +359,7 @@ select {
 }
 
 .profile-heading {
+    font-size: 1.3em;
     background-color: #ff8c61;
     color: #fff;
     padding: 15px;
@@ -433,7 +434,6 @@ select {
 }
 
 .user-reviews div {
-    border: 1px solid #ddd;
     padding: 10px;
     border-radius: 8px;
 }
@@ -524,8 +524,6 @@ select {
 .more-info,
 .review-edit,
 .submit-edit-changes {
-    display: inline-block;
-    margin-top: 15px;
     padding: 10px 15px;
     font-size: 16px;
     font-weight: bold;
@@ -612,6 +610,8 @@ review-edit,
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
+    display: block;
+    margin: 0 auto;
 }
 
 .publish-review:hover {
@@ -630,6 +630,14 @@ review-edit,
 
 .options {
     text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.user-profile-options {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 15px;
 }
 
 .review-details {
@@ -639,11 +647,14 @@ review-edit,
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
+    line-height: 1.4;
 }
 
 .details-review-header {
-    font-size: 1.5em;
+    font-size: 1.25em;
     color: #333;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .details-review-title {
@@ -654,20 +665,28 @@ review-edit,
     color: #007bff;
 }
 
-.details-review-data {
-    margin: 8px 0;
-    font-size: 1em;
-    color: #555;
-}
-
-.details-review-data.important {
-    font-weight: bold;
-    color: #121111;
-}
-
 .details-review-overall-experience {
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.details-review-label {
     font-weight: bold;
     color: #000000;
+    display: block;
+}
+
+.details-review-value {
+    color: #333;
+    margin-top: 8px;
+    font-size: 1em;
+}
+
+.car-image-container {
+    text-align: center;
 }
 
 .car-image {
@@ -677,6 +696,7 @@ review-edit,
     border: 1px solid #ddd;
     border-radius: 5px;
 }
+
 .delete-review-container {
     text-align: center;
     margin: 20px;
@@ -777,4 +797,163 @@ review-edit,
 
 .change-password-submit:hover {
     background-color: #2980b9;
+}
+
+.main-page {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-page-title {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.find-reviews {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.find-reviews:hover {
+    background-color: #2980b9;
+}
+
+.random-cars {
+    text-align: center;
+    width: auto;
+    margin: 20px auto;
+    padding: 25px
+}
+
+.random-cars-title {
+    color: #333;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.random-cars-revies {
+    list-style: none;
+    padding: 0;
+    margin: 40px auto;
+}
+
+.random-cars-revies li {
+    margin: 20px auto;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 60%;
+}
+
+.random-cars-revies li strong {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.random-cars-revies li p {
+    color: #555;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.random-cars-revies li .car-image {
+    max-width: 60%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.random-cars-revies li .more-info {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.random-cars-revies li .more-info:hover {
+    background-color: #217dbb;
+}
+
+.find-cars-form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.find-cars-form-group {
+    margin-bottom: 20px;
+}
+
+.find-cars-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.find-cars-input {
+    position: relative;
+}
+
+.find-cars-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group-span {
+    color: #ff0000;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+}
+
+.find-cars-submit {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto; 
+}
+
+.find-cars-submit:hover {
+    background-color: #45a049;
+}
+
+.find-cars-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
 }

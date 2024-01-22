@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CarForum.Database;
 using CarForum.Models;
-using CarForum.Services;
 using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +29,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     }
 
     [HttpGet("ResetPassword")]
-    public IActionResult ResetPassword(string code = null)
+    public IActionResult ResetPassword()
     {
         return View();
     }

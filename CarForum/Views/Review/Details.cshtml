@@ -7,6 +7,7 @@
 <div class="review-details">
     <h3 class="details-review-header">Подробное описание отзыва про @Model.CarBrand @Model.CarModel</h3>
     <strong class="details-review-title">@Model.Title</strong>
+    <p class="details-review-data">Опубликовано: @Model.PublishTime.ToShortDateString()</p>
     <p class="details-review-data">Рейтинг: @Model.Rating</p>
     <p class="details-review-data">Год: @Model.Year</p>
     <p class="details-review-data">Текущий пробег: @Model.Mileage км</p>
@@ -17,15 +18,22 @@
     <p class="details-review-data">Тип привода: @Model.DriveType</p>
     <p class="details-review-data">Основные приемущества: @Model.Advantages</p>
     <p class="details-review-data">Недостатки: @Model.Disadvantages</p>
-    <p class="details-review-data details-review-overall-experience">Общие впечатления: @Model.OverallExperience</p>
-    <p class="details-review-data">Опубликовано: @Model.PublishTime.ToShortDateString()</p>
+    <p class="details-review-label">Общие впечатления:</p>
+    <div class="details-review-overall-experience">
+        <span class="details-review-value">@Model.OverallExperience</span>
+    </div>
     @if (!string.IsNullOrEmpty(Model.PhotoPath))
     {
-        <img class="car-image" src="@Url.Content(Model.PhotoPath)" alt="Фотография авто" />
+        <div class="car-image-container">
+            <img class="car-image" src="@Url.Content(Model.PhotoPath)" alt="Фотография авто" />
+        </div>
     }
     <div class="options">
         <a asp-action="UserProfile" asp-controller="Account" class="more-info">Назад</a>
-        <a asp-action="EditReview" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Редактировать</a>
-        <a asp-action="Delete" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Удалить</a>
+        @if (ViewBag.CurrentUser.Id == Model.AuthorId)
+        {
+            <a asp-action="EditReview" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Редактировать</a>
+            <a asp-action="Delete" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Удалить</a>
+        }
     </div>
 </div>

@@ -37,10 +37,6 @@
       "PackagePath": "staticwebassets\\js\\models.json"
     },
     {
-      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\selectcategories.js",
-      "PackagePath": "staticwebassets\\js\\selectcategories.js"
-    },
-    {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
@@ -279,6 +275,18 @@
     {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\1ff21552-53ac-42c6-9ac2-4c2cb6607848_large_lada_vesta_sport_4.jpg",
+      "PackagePath": "staticwebassets\\uploads\\1ff21552-53ac-42c6-9ac2-4c2cb6607848_large_lada_vesta_sport_4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\45c6da39-dc66-4ad4-ada1-6110b99d5b96_tiguan.jpg",
+      "PackagePath": "staticwebassets\\uploads\\45c6da39-dc66-4ad4-ada1-6110b99d5b96_tiguan.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\5967cf40-a475-4df4-84c3-76d13ce5ffe1_s class.jpg",
+      "PackagePath": "staticwebassets\\uploads\\5967cf40-a475-4df4-84c3-76d13ce5ffe1_s class.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CarForum.Microsoft.AspNetCore.StaticWebAssets.props",

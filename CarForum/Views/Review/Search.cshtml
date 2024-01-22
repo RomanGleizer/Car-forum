@@ -1,0 +1,223 @@
+﻿@model CarForum.ViewModels.FindReviewViewModel
+
+@{
+    ViewBag.Title = "Искать объявления";
+}
+
+<h2 class="find-cars-title">Поиск объявлений</h2>
+
+<form class="find-cars-form" asp-controller="Review" asp-action="Search" method="post">
+
+    <div class="find-cars-form-group">
+        <label asp-for="Brand" class="find-cars-label">Бренд</label>
+        <div class="find-cars-input">
+            <select id="brand" asp-for="Brand" class="find-cars-select"></select>
+            <span asp-validation-for="Brand" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div class="find-cars-form-group">
+        <label asp-for="Model" class="find-cars-label">Модель</label>
+        <div class="find-cars-input">
+            <select id="model" asp-for="Model" class="find-cars-select"></select>
+            <span asp-validation-for="Model" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div class="find-cars-form-group">
+        <label asp-for="Year" class="find-cars-label">Год производства</label>
+        <div class="find-cars-input">
+            <select id="year" asp-for="Year" class="find-cars-select"></select>
+            <span asp-validation-for="Year" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div class="find-cars-form-group">
+        <label asp-for="EngineType" class="find-cars-label">Тип двигателя</label>
+        <div class="find-cars-input">
+            <select id="engine_types" asp-for="EngineType" class="find-cars-select"></select>
+            <span asp-validation-for="EngineType" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div class="find-cars-form-group">
+        <label asp-for="Body" class="find-cars-label">Кузов</label>
+        <div class="find-cars-input">
+            <select id="body_types" asp-for="Body" class="find-cars-select"></select>
+            <span asp-validation-for="Body" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div class="find-cars-form-group">
+        <label asp-for="Transmission" class="find-cars-label">Коробка передач</label>
+        <div class="find-cars-input">
+            <select id="transmission_types" asp-for="Transmission" class="find-cars-select"></select>
+            <span asp-validation-for="Transmission" class="text-danger form-group-span"></span>
+        </div>
+    </div>
+
+    <div>
+        <button class="find-cars-submit" type="submit">Искать</button>
+    </div>
+</form>
+
+@if (ViewBag.SuitableReviews is not null && ViewBag.SuitableReviews.Count > 0)
+{
+    <div class="user-reviews">
+        <ul id="userReviewsList">
+            @if (ViewBag.SuitableReviews is not null)
+            {
+                @foreach (var review in ViewBag.SuitableReviews)
+                {
+                    <li>
+                        <strong>@review.Title</strong>
+                        <p>Рейтинг: @review.Rating</p>
+                        <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                        <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                        <div class="options">
+                            <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.PhotoPath))
+                        {
+                            <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+}
+else if (ViewBag.SuitableReviews is not null && ViewBag.SuitableReviews.Count == 0)
+{
+    <h2 class="find-cars-title">Ничего не найдено</h2>
+}
+
+<script>
+    const brandSelect = document.getElementById("brand");
+    const modelSelect = document.getElementById("model");
+    const yearSelect = document.getElementById("year");
+    const transmissionSelect = document.getElementById("transmission_types");
+    const bodySelect = document.getElementById("body_types");
+    const engineTypes = document.getElementById("engine_types");
+
+    const modelsDataPath = '/js/models.json';
+    const brandsDataPath = '/js/brands.json';
+
+    let selectedBrand;
+
+    const loadJsonData = async (jsonPath) => {
+        try {
+            const response = await fetch(jsonPath);
+            return await response.json();
+        } catch (error) {
+            console.error(`Error loading JSON data from ${jsonPath}:`, error);
+            return null;
+        }
+    };
+
+    const addOption = (select, value) => {
+        if (select) {
+            const option = document.createElement("option");
+            option.value = value;
+            option.text = value;
+            select.add(option);
+        }
+    };
+
+    const loadOptionsForSelect = async (select, jsonPath, key) => {
+        const data = await loadJsonData(jsonPath);
+
+        if (data) {
+            select.innerHTML = "";
+            data.forEach(item => {
+                addOption(select, item[key]);
+            });
+        }
+    };
+    const updateModels = async (data) => {
+        const selectedBrand = brandSelect.value;
+        modelSelect.options.length = 0;
+
+        const selectedBrandData = data[selectedBrand];
+
+        if (selectedBrandData) {
+            selectedBrandData.forEach(model => {
+                addOption(modelSelect, model);
+            });
+
+            if (modelSelect.value !== "") {
+                await loadYears();
+
+                const transmissionData = await loadJsonData('/js/transmission_types.json');
+                const bodyData = await loadJsonData('/js/body_types.json');
+                const engineTypeData = await loadJsonData('/js/engine_types.json');
+                const engineCapacityData = await loadJsonData('/js/engine_capacity.json');
+                const driveTypeData = await loadJsonData('/js/drive_types.json');
+
+                populateDropdown('transmission_types', transmissionData);
+                populateDropdown('body_types', bodyData);
+                populateDropdown('engine_types', engineTypeData);
+            }
+        } else {
+            modelSelect.options.length = 0;
+            yearSelect.options.length = 0;
+            transmissionSelect.options.length = 0;
+            bodySelect.options.length = 0;
+            engineTypes.options.length = 0;
+        }
+    };
+
+    const loadYears = async () => {
+        const yearsJsonPath = '/js/years.json';
+        const data = await loadJsonData(yearsJsonPath);
+
+        if (data) {
+            yearSelect.innerHTML = "";
+            data.years.forEach(year => {
+                addOption(yearSelect, year);
+            });
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            const brandsData = await loadJsonData(brandsDataPath);
+            const modelsData = await loadJsonData(modelsDataPath);
+
+            if (brandsData && modelsData && brandSelect) {
+                brandsData.forEach(brand => {
+                    addOption(brandSelect, brand.name);
+                });
+
+                brandSelect.addEventListener('change', async () => {
+                    if (brandSelect.value !== selectedBrand) {
+                        selectedBrand = brandSelect.value;
+                        await updateModels(modelsData);
+                    }
+                });
+
+                modelSelect.addEventListener('change', async () => {
+                    await loadYears();
+                });
+
+                updateModels(modelsData);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    function populateDropdown(selectId, data) {
+        const select = document.getElementById(selectId);
+
+        data.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.name;
+            optionElement.textContent = option.name;
+            select.appendChild(optionElement);
+        });
+    }
+
+    fetchData();
+
+</script>

@@ -25,48 +25,54 @@
     </div>
 </div>
 
-<p class="user-reviews-title">Удаленные отзывы</p>
-<div class="user-reviews">
-    <ul id="userReviewsList">
-        @foreach (var review in Model.DeletedReviews)
-        {
-            <li>
-                <strong>@review.Title</strong>
-                <p>Рейтинг: @review.Rating</p>
-                <p>Автомобиль: @review.CarBrand @review.CarModel</p>
-                <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
-                <div class="options">
-                    <a asp-action="DeletedReviewDetails" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
-                </div>
-                @if (!string.IsNullOrEmpty(review.PhotoPath))
-                {
-                    <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
-                }
-            </li>
-        }
-    </ul>
-</div>
+@if (Model.DeletedReviews.Count > 0)
+{
+    <p class="user-reviews-title">Удаленные отзывы</p>
+    <div class="user-reviews">
+        <ul id="userReviewsList">
+            @foreach (var review in Model.DeletedReviews)
+            {
+                <li>
+                    <strong>@review.Title</strong>
+                    <p>Рейтинг: @review.Rating</p>
+                    <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                    <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                    <div class="user-profile-options">
+                        <a asp-action="DeletedReviewDetails" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.PhotoPath))
+                    {
+                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
 
-<p class="user-reviews-title">Ваши отзывы</p>
-<div class="user-reviews">
-    <ul id="userReviewsList">
-        @foreach (var review in Model.Reviews)
-        {
-            <li>
-                <strong>@review.Title</strong>
-                <p>Рейтинг: @review.Rating</p>
-                <p>Автомобиль: @review.CarBrand @review.CarModel</p>
-                <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
-                <div class="options">
-                    <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
-                    <a asp-action="EditReview" asp-controller="Review" asp-route-id="@review.Id" class="review-edit">Редактировать</a>
-                    <a asp-action="Delete" asp-controller="Review" asp-route-id="@review.Id" class="review-edit">Удалить</a>
-                </div>
-                @if (!string.IsNullOrEmpty(review.PhotoPath))
-                {
-                    <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
-                }
-            </li> 
-        }
-    </ul>
-</div>
+@if (Model.Reviews.Count > 0)
+{
+    <p class="user-reviews-title">Ваши отзывы</p>
+    <div class="user-reviews">
+        <ul id="userReviewsList">
+            @foreach (var review in Model.Reviews)
+            {
+                <li>
+                    <strong>@review.Title</strong>
+                    <p>Рейтинг: @review.Rating</p>
+                    <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                    <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                    <div class="user-profile-options">
+                        <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                        <a asp-action="EditReview" asp-controller="Review" asp-route-id="@review.Id" class="review-edit">Редактировать</a>
+                        <a asp-action="Delete" asp-controller="Review" asp-route-id="@review.Id" class="review-edit">Удалить</a>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.PhotoPath))
+                    {
+                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
