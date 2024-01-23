@@ -54,7 +54,7 @@
                                             @comment.Author.FirstName @comment.Author.LastName @(comment.PublishTime?.ToShortTimeString() ?? "")
                                         </strong>
                                         <textarea class="comment-edit" id="editCommentText_@comment.Id" rows="6" style="display: none; width: 100%;">@comment.Text</textarea>
-                                        <span id="comment" class="comment-display" id="commentText_@comment.Id">@comment.Text</span>
+                                        <span id="commentText_@comment.Id" class="comment-display">@comment.Text</span>
                                         <button class="apply-edit" data-comment-id="@comment.Id" style="display: none;" onclick="applyEdit(this)">Применить изменения</button>
                                     </div>
                                     @if (review.Author.Id != ViewBag.CurrentUser.Id)
@@ -73,7 +73,6 @@
                                 </div>
                             </li>
                         }
-
                     </ul>
                 </div>
             </li>
@@ -139,20 +138,6 @@
         });
     });
 
-    function applyEdit(button) {
-        var commentId = button.getAttribute('data-comment-id');
-        var commentTextDisplay = document.getElementById('commentText_' + commentId);
-        var commentTextEdit = document.getElementById('editCommentText_' + commentId);
-        var applyButton = document.querySelector('.apply-edit[data-comment-id="' + commentId + '"]');
-
-        commentTextDisplay.innerHTML = commentTextEdit.value;
-        commentTextDisplay.style.display = 'block';
-        commentTextEdit.style.display = 'none';
-
-        applyButton.style.display = 'none';
-    }
-</script>
-<script>
     function applyEdit(button) {
         var commentId = button.getAttribute('data-comment-id');
         var commentTextEdit = document.getElementById('editCommentText_' + commentId);
