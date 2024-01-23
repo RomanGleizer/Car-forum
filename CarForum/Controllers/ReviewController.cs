@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarForum.Controllers;
 
+[ApiController]
 [Route("api/{controller}")]
 public class ReviewController(IMapper mapper, ApplicationDbContext context, UserManager<User> userManager, IWebHostEnvironment hostEnvironment) : Controller
 {
@@ -30,7 +31,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     public async Task<IActionResult> EditReview(int id)
     {
         var review = await GetReviewById(id);
-        if (review is null) return NotFound();
+        if (review is null) return NotFound("Отзыв не найден");
 
         var model = _mapper.Map<EditReviewViewModel>(review);
         return View(model);
@@ -71,7 +72,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     }
 
     [HttpPost("CreateReview")]
-    public async Task<IActionResult> CreateReview(CreateReviewViewModel model)
+    public async Task<IActionResult> CreateReview([FromForm] CreateReviewViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
 
@@ -94,7 +95,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     }
 
     [HttpPost("EditReview")]
-    public async Task<IActionResult> EditReview(EditReviewViewModel model, int id)
+    public async Task<IActionResult> EditReview([FromForm] EditReviewViewModel model, int id)
     {
         if (!ModelState.IsValid) return View(model);
 
@@ -102,6 +103,9 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         if (review is not null)
         {
             var currentUser = _userManager.GetUserAsync(User).Result;
+            if (currentUser is null)
+                return NotFound("Пользователь не найден");
+
             if (currentUser.Id == review.Author.Id)
             {
                 review.Convert(model);
@@ -111,8 +115,6 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
                 await _context.SaveChangesAsync();
                 return RedirectToAction("UserProfile", "Account");
             }
-            else return NotFound();
-
         }
         
         ModelState.AddModelError("", "Отзыва не существует");
@@ -125,7 +127,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         {
             if (!isDeleted)
             {
-                var deletedReview = new DeletedReview
+                var deletedReview = new DeletedReviewViewModel
                 {
                     Title = review.Title,
                     Rating = review.Rating,
@@ -191,7 +193,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         });
 
     [HttpPost("Search")]
-    public async Task<IActionResult> Search(FindReviewViewModel reviewModel)
+    public async Task<IActionResult> Search([FromForm] FindReviewViewModel reviewModel)
     {
         if (!ModelState.IsValid)
             return View(reviewModel);
@@ -236,7 +238,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
             .FirstOrDefaultAsync();
     }
 
-    private async Task<DeletedReview?> GetDeletedReviewById(int id)
+    private async Task<DeletedReviewViewModel?> GetDeletedReviewById(int id)
     {
         var user = await _userManager.GetUserAsync(User);
         return await _context.DeletedReviews

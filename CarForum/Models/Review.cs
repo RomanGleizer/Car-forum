@@ -39,4 +39,6 @@ public class Review
     public string PhotoPath { get; set; }
 
     public DateTime PublishTime { get; set; }
+
+    public List<Comment> Comments { get; set; } = new List<Comment>();
 }

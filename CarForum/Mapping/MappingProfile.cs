@@ -24,6 +24,6 @@ public class MappingProfile : Profile
         CreateMap<CreateReviewViewModel, Review>();
         CreateMap<EditReviewViewModel, Review>();
         CreateMap<Review, EditReviewViewModel>();
-        CreateMap<DeletedReview, Review>();
+        CreateMap<DeletedReviewViewModel, Review>();
     }
 }

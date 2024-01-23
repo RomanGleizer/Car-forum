@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Reflection.Emit;
+using CarForum.ViewModels;
 
 namespace CarForum.Database;
 
@@ -11,22 +12,24 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     public DbSet<Review> Reviews { get; set; }
 
-    public DbSet<DeletedReview> DeletedReviews { get; set; }
+    public DbSet<DeletedReviewViewModel> DeletedReviews { get; set; }
+
+    public DbSet<Comment> Comments { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         Database.EnsureCreated();
-        Database.Migrate();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Review>()
-            .HasOne(r => r.Author)
-            .WithMany(u => u.Reviews)
-            .HasForeignKey(r => r.AuthorId);
+        builder.Entity<Comment>()
+            .HasOne(c => c.Review)
+            .WithMany(r => r.Comments)
+            .HasForeignKey(c => c.ReviewId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-        builder.Entity<DeletedReview>()
+        builder.Entity<DeletedReviewViewModel>()
             .Property(r => r.Id)
             .ValueGeneratedOnAdd();
 

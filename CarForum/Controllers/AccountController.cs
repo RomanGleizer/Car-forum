@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarForum.Controllers;
 
+[ApiController]
 [Route("api/{controller}")]
 public class AccountController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext context) : Controller
 {
@@ -61,7 +62,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
 
     [HttpPost("Login")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Login(LoginViewModel model)
+    public async Task<IActionResult> Login([FromForm] LoginViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
 
@@ -75,7 +76,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(RegisterViewModel model)
+    public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
 
@@ -95,7 +96,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     }
 
     [HttpPost("EditProfile")]
-    public async Task<IActionResult> EditProfile(EditProfileViewModel model)
+    public async Task<IActionResult> EditProfile([FromForm] EditProfileViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
 
@@ -124,7 +125,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
 
     [HttpPost("ResetPassword")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordViewModel model)
     {
         if (!ModelState.IsValid)
             return View(model);
@@ -136,7 +137,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
         var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
         if (result.Succeeded)
-            return View("UserProfile", user);
+            return View("Login", "Account");
 
         foreach (var error in result.Errors)
             ModelState.AddModelError(string.Empty, error.Description);

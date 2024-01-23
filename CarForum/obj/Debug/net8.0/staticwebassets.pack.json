@@ -277,16 +277,68 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\029dcf31-a111-4b39-ac8d-3aded4a90e25_tiguan.jpg",
+      "PackagePath": "staticwebassets\\uploads\\029dcf31-a111-4b39-ac8d-3aded4a90e25_tiguan.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\051fec71-cbd9-4c71-b4cf-4cbee172359a_vesta..jpg",
+      "PackagePath": "staticwebassets\\uploads\\051fec71-cbd9-4c71-b4cf-4cbee172359a_vesta..jpg"
+    },
+    {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\1ff21552-53ac-42c6-9ac2-4c2cb6607848_large_lada_vesta_sport_4.jpg",
       "PackagePath": "staticwebassets\\uploads\\1ff21552-53ac-42c6-9ac2-4c2cb6607848_large_lada_vesta_sport_4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\35239516-a4d8-4045-a9be-a1f0929b6ebe_camry.jpg",
+      "PackagePath": "staticwebassets\\uploads\\35239516-a4d8-4045-a9be-a1f0929b6ebe_camry.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\388c4c0b-8e6e-4425-9ff2-16e58285a80f_honda.webp",
+      "PackagePath": "staticwebassets\\uploads\\388c4c0b-8e6e-4425-9ff2-16e58285a80f_honda.webp"
     },
     {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\45c6da39-dc66-4ad4-ada1-6110b99d5b96_tiguan.jpg",
       "PackagePath": "staticwebassets\\uploads\\45c6da39-dc66-4ad4-ada1-6110b99d5b96_tiguan.jpg"
     },
     {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\5246c625-23a6-493e-8eba-ec2c29e88187_vesta.jfif",
+      "PackagePath": "staticwebassets\\uploads\\5246c625-23a6-493e-8eba-ec2c29e88187_vesta.jfif"
+    },
+    {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\5967cf40-a475-4df4-84c3-76d13ce5ffe1_s class.jpg",
       "PackagePath": "staticwebassets\\uploads\\5967cf40-a475-4df4-84c3-76d13ce5ffe1_s class.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\5971d1c6-ef88-4435-a61d-c5dbd2dfd534_vesta.jfif",
+      "PackagePath": "staticwebassets\\uploads\\5971d1c6-ef88-4435-a61d-c5dbd2dfd534_vesta.jfif"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\6aecbd31-b8ce-4c8c-834d-df1987b3f1ee_vesta..jpg",
+      "PackagePath": "staticwebassets\\uploads\\6aecbd31-b8ce-4c8c-834d-df1987b3f1ee_vesta..jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\7150bd8d-b0b6-4bf6-89f6-3a6f8179dffd_tiguan.jpg",
+      "PackagePath": "staticwebassets\\uploads\\7150bd8d-b0b6-4bf6-89f6-3a6f8179dffd_tiguan.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\ade0316a-5a9f-49ba-a9ce-60c31f4484a1_tiguan.jpg",
+      "PackagePath": "staticwebassets\\uploads\\ade0316a-5a9f-49ba-a9ce-60c31f4484a1_tiguan.jpg"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\c93160d0-39f5-4994-a004-89f9a4e303ab_q7.webp",
+      "PackagePath": "staticwebassets\\uploads\\c93160d0-39f5-4994-a004-89f9a4e303ab_q7.webp"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\cea8f4c1-9198-49fd-8f62-19397d8ecd3b_q7.webp",
+      "PackagePath": "staticwebassets\\uploads\\cea8f4c1-9198-49fd-8f62-19397d8ecd3b_q7.webp"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\f8a23fc0-c6aa-4dd5-97a4-9796de62c6ce_vesta.jfif",
+      "PackagePath": "staticwebassets\\uploads\\f8a23fc0-c6aa-4dd5-97a4-9796de62c6ce_vesta.jfif"
+    },
+    {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\fefbaa0b-0248-4dee-b28f-66edb35fdd9d_tiguan.jpg",
+      "PackagePath": "staticwebassets\\uploads\\fefbaa0b-0248-4dee-b28f-66edb35fdd9d_tiguan.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.CarForum.Microsoft.AspNetCore.StaticWebAssets.props",

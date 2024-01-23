@@ -1,0 +1,108 @@
+﻿using CarForum.Database;
+using CarForum.Models;
+using CarForum.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.Design;
+
+namespace CarForum.Controllers;
+
+[ApiController]
+[Route("api/{controller}")]
+public class CommentController(ApplicationDbContext context, UserManager<User> userManager) : Controller
+{
+    private readonly UserManager<User> _userManager = userManager;
+    private readonly ApplicationDbContext _context = context;
+
+    [HttpPost("AddComment")]
+    public async Task<IActionResult> AddComment([FromForm] CreateCommentViewModel model)
+    {
+        if (!ModelState.IsValid)
+            return View(model);
+
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null) return NotFound("Пользователь не найден");
+
+        var review = await _context.Reviews
+            .Include(r => r.Comments)
+            .FirstOrDefaultAsync(r => r.Id == model.Id);
+
+        if (review is null)
+            return NotFound();
+
+        var comment = new Comment
+        {
+            Text = model.Text,
+            Review = review,
+            ReviewId = review.Id,
+            Author = currentUser,
+            PublishTime = DateTime.Now
+        };
+
+        review.Comments.Add(comment);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpPost("LikeComment/{commentId}")]
+    public async Task<IActionResult> LikeComment(int commentId)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null) return NotFound();
+
+        var comment = await GetCommentByIdAsync(commentId);
+        if (comment is null) return NotFound();
+
+        if (!comment.LikedByUsers.Any(u => u.Id == currentUser.Id))
+        {
+            comment.LikedByUsers.Add(currentUser);
+            comment.LikesAmount++;
+        }
+        else
+        {
+            comment.LikedByUsers.Remove(currentUser);
+            comment.LikesAmount--;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Json(new { likesAmount = comment.LikesAmount, isLikedByCurrentUser = comment.LikedByUsers.Contains(currentUser) });
+    }
+
+    [HttpPut("EditComment/{commentId}")]
+    public async Task<IActionResult> EditComment(int commentId, [FromBody] EditCommentViewModel model)
+    {
+        var comment = await GetCommentByIdAsync(commentId);
+        if (comment is null) return NotFound();
+
+        comment.Text = model.Text;
+        await _context.SaveChangesAsync();
+
+        return Json(comment);
+    }
+
+    [HttpDelete("DeleteComment/{commentId}")]
+    public async Task<IActionResult> DeleteComment(int commentId)
+    {
+        var comment = await GetCommentByIdAsync(commentId);
+        if (comment is null) return NotFound();
+
+        _context.Comments.Remove(comment);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    private async Task<Comment> GetCommentByIdAsync(int id)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null) return null;
+
+        var comment = await _context.Comments
+            .Include(c => c.LikedByUsers)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+        return comment;
+    }
+}

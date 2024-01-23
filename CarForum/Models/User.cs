@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CarForum.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace CarForum.Models;
 
@@ -24,7 +25,5 @@ public class User : IdentityUser
 
     public List<Review> Reviews { get; set; } = new List<Review>();
 
-    public List<DeletedReview> DeletedReviews { get; set; } = new List<DeletedReview>();
-
-    public List<Comment> Comments { get; set; } = new List<Comment>();
+    public List<DeletedReviewViewModel> DeletedReviews { get; set; } = new List<DeletedReviewViewModel>();
 }

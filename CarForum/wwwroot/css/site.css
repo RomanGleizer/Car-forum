@@ -127,6 +127,10 @@ footer ul li {
     margin-left: 5px;
 }
 
+textarea {
+    resize: none;
+}
+
 .reviews {
     margin-top: 20px;
     padding: 10px;
@@ -529,7 +533,7 @@ select {
     font-weight: bold;
     text-decoration: none;
     color: #fff !important;
-    background-color: #3498db;
+    background-color: #3498db !important;
     border-radius: 5px;
     transition: background-color 0.3s ease-in-out;
 }
@@ -956,4 +960,226 @@ review-edit,
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+}
+
+.main-page-title {
+    margin: 0;
+}
+
+.find-reviews {
+    margin-top: 10px;
+}
+
+.random-cars {
+    margin: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.random-cars-title {
+    margin: 0 0 20px;
+    color: #333;
+}
+
+.random-cars-revies {
+    list-style: none;
+    padding: 0;
+}
+
+.random-cars-revies li {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.random-cars-revies li:last-child {
+    border-bottom: none;
+}
+
+.random-cars-revies strong {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.random-cars-revies p {
+    margin: 0;
+}
+
+.options {
+    margin-top: 10px;
+}
+
+.more-info {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.car-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-list li {
+    margin-bottom: 15px;
+}
+
+.add-comment-section {
+    margin-top: 20px;
+}
+
+.add-comment-section h4 {
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.add-comment-section form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-comment-section textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 60%;
+    margin: 20px auto;
+}
+
+.add-comment-section button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-options button {
+    padding: 8px 12px;
+    color: white;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comment-options button:hover {
+    background-color: #217dbb;
+}
+
+.add-comment {
+    background-color: #3498db !important;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: auto;
+}
+
+.add-comment:hover {
+    background-color: #2980b9;
+}
+
+.comment-like {
+    display: block;
+    text-align: right;
+}
+
+.comment-options {
+    display: block;
+    text-align: left;
+    margin-top: 15px; 
+}
+
+.like-comment {
+    background-color: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.like-comment:hover {
+    background-color: #c0392b;
+}
+
+.like-comment.liked {
+    background-color: #c0392b;
+}
+
+.like-comment.liked:hover {
+    background-color: #e74c3c;
+}
+
+.like-count {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.comment-text {
+    display: block;
+    text-align: left;
+}
+
+.like-button {
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.liked {
+    background-color: green;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.not-liked {
+    background-color: #cf0d0d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.liked:hover {
+    background-color: darkgreen;
+}
+
+.not-liked:hover {
+    background-color: darkred;
+}
+
+.apply-edit {
+    background-color: #4caf50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.apply-edit:hover {
+    background-color: #45a049;
 }

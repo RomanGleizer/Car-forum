@@ -1,32 +1,207 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<CarForum.Models.User> UserManager
+
+@{
     ViewData["Title"] = "Автомобильный форум";
+    var currentUser = await UserManager.GetUserAsync(User);
 }
 
 <div class="main-page">
-    <h3 class="main-page-title">Добро пожаловать! Ищите отзывы про интересующие вас автомбили.</h3>
+    <h3 class="main-page-title">Добро пожаловать! Ищите отзывы про интересующие вас автомобили.</h3>
     <a asp-action="Search" asp-controller="Review" class="find-reviews">Найти отзывы</a>
 </div>
 <div class="random-cars">
-    <h3 class="random-cars-title">Вам могут быть инетересны</h3>
     <ul class="random-cars-revies" id="userReviewsList">
-        @if (ViewBag.RandomReviews is not null)
+        @if (ViewBag.RandomReview is not null)
         {
-            @foreach (var review in ViewBag.RandomReviews)
-            {
-                <li>
-                    <strong>@review.Title</strong>
-                    <p>Рейтинг: @(review.Rating ?? 0)</p>
-                    <p>Автомобиль: @(review.CarBrand ?? "") @(review.CarModel ?? "")</p>
-                    <p>Опубликовано: @(review.PublishTime?.ToShortDateString() ?? "")</p>
-                    <div class="options">
-                        <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
-                    </div>
-                    @if (!string.IsNullOrEmpty(review.PhotoPath))
+            <li class="random-cars-title">Вам могут быть интересны</li>
+            var review = ViewBag.RandomReview;
+            <li>
+                <strong>@review.Title</strong>
+                <p>Рейтинг: @(review.Rating ?? 0)</p>
+                <p>Автомобиль: @(review.CarBrand ?? "") @(review.CarModel ?? "")</p>
+                <p>Опубликовано: @(review.PublishTime?.ToShortDateString() ?? "")</p>
+                <div class="options">
+                    <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                </div>
+                @if (!string.IsNullOrEmpty(review.PhotoPath))
+                {
+                    <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                }
+
+                <div class="comments-section">
+
+                    @if (review.Author.Id != ViewBag.CurrentUser.Id)
                     {
-                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                        <div class="add-comment-section">
+                            <h4>Добавить комментарий:</h4>
+                            <form asp-action="AddComment" asp-controller="Comment">
+                                <input type="hidden" name="id" value="@review.Id" />
+                                <textarea name="text" id="newCommentText" rows="3" required></textarea>
+                                <button class="add-comment" type="submit">Добавить</button>
+                            </form>
+                        </div>
                     }
-                </li>
-            }
+
+                    <h4>Комментарии:</h4>
+                    <ul class="comment-list">
+                        @foreach (var comment in review.Comments)
+                        {
+                            <li>
+                                <div class="comment-content">
+                                    <div class="comment-text">
+                                        <strong class="comment-author">
+                                            @comment.Author.FirstName @comment.Author.LastName @(comment.PublishTime?.ToShortTimeString() ?? "")
+                                        </strong>
+                                        <textarea class="comment-edit" id="editCommentText_@comment.Id" rows="6" style="display: none; width: 100%;">@comment.Text</textarea>
+                                        <span id="comment" class="comment-display" id="commentText_@comment.Id">@comment.Text</span>
+                                        <button class="apply-edit" data-comment-id="@comment.Id" style="display: none;" onclick="applyEdit(this)">Применить изменения</button>
+                                    </div>
+                                    @if (review.Author.Id != ViewBag.CurrentUser.Id)
+                                    {
+                                        <div class="comment-options">
+                                            <button class="edit-comment" data-comment-id="@comment.Id">Редактировать</button>
+                                            <button id="delete-comment" class="delete-comment" data-comment-id="@comment.Id" onclick="deleteComment(this)">Удалить</button>
+                                        </div>
+                                    }
+                                    <div class="comment-like">
+                                        <form id="likeForm" data-comment-id="@comment.Id">
+                                            <button type="button" class="like-button @(comment.LikedByUsers.Contains(currentUser) ? "liked" : "not-liked")" data-liked="@(comment.LikedByUsers.Contains(currentUser) ? "true" : "false")" onclick="likeComment(this)">Нравится</button>
+                                            <span class="like-count">@comment.LikesAmount</span>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </li>
+        }
+        else
+        {
+            <li class="random-cars-title">Будьте первым, кто добавит отзыв :)</li>
         }
     </ul>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function likeComment(button) {
+        var commentId = $("#likeForm").data("comment-id");
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Comment/LikeComment/" + commentId,
+            success: function (result) {
+                $("#likeForm .like-count").text(result.likesAmount);
+
+                var isLiked = result.isLikedByCurrentUser;
+                button.setAttribute("data-liked", isLiked.toString());
+                updateButtonStyle(button);
+            },
+            error: function () {
+                alert("Ошибка при отправке запроса.");
+            }
+        });
+    }
+
+    function updateButtonStyle(button) {
+        var isLiked = button.getAttribute("data-liked") === "true";
+        $(button).toggleClass("liked", isLiked);
+        $(button).toggleClass("not-liked", !isLiked);
+    }
+
+    $(document).ready(function () {
+        $(".like-button").each(function () {
+            updateButtonStyle(this);
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var editButtons = document.querySelectorAll('.edit-comment');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var commentId = button.getAttribute('data-comment-id');
+                var commentTextDisplay = document.getElementById('commentText_' + commentId);
+                var commentTextEdit = document.getElementById('editCommentText_' + commentId);
+                var applyButton = document.querySelector('.apply-edit[data-comment-id="' + commentId + '"]');
+
+                commentTextEdit.value = commentTextDisplay.textContent;
+
+                commentTextDisplay.style.display = 'none';
+                commentTextEdit.style.display = 'block';
+
+                applyButton.style.display = 'inline-block';
+            });
+        });
+    });
+
+    function applyEdit(button) {
+        var commentId = button.getAttribute('data-comment-id');
+        var commentTextDisplay = document.getElementById('commentText_' + commentId);
+        var commentTextEdit = document.getElementById('editCommentText_' + commentId);
+        var applyButton = document.querySelector('.apply-edit[data-comment-id="' + commentId + '"]');
+
+        commentTextDisplay.innerHTML = commentTextEdit.value;
+        commentTextDisplay.style.display = 'block';
+        commentTextEdit.style.display = 'none';
+
+        applyButton.style.display = 'none';
+    }
+</script>
+<script>
+    function applyEdit(button) {
+        var commentId = button.getAttribute('data-comment-id');
+        var commentTextEdit = document.getElementById('editCommentText_' + commentId);
+
+        var editedText = commentTextEdit.value;
+        var apiUrl = '/api/Comment/EditComment/' + commentId;
+
+        $.ajax({
+            type: 'PUT',
+            url: apiUrl,
+            contentType: 'application/json',
+            data: JSON.stringify({ Text: editedText }),
+            success: function (updatedComment) {
+                var commentDisplay = document.getElementById('commentText_' + commentId);
+
+                commentDisplay.textContent = updatedComment.text;
+                commentTextEdit.style.display = 'none';
+                button.style.display = 'none';
+                commentDisplay.style.display = 'inline-block';
+
+            },
+            error: function (error) {
+                console.error('Произошла ошибка при редактировании комментария.');
+            }
+        });
+    }
+</script>
+<script>
+    function deleteComment(button) {
+        var commentId = button.getAttribute('data-comment-id');
+        var apiUrl = '/api/Comment/DeleteComment/' + commentId;
+
+        if (confirm('Вы уверены, что хотите удалить этот комментарий?')) {
+            $.ajax({
+                type: 'DELETE',
+                url: apiUrl,
+                success: function () {
+                    var commentContainer = button.closest('.comment-content');
+                    if (commentContainer) {
+                        commentContainer.parentElement.remove();
+                        console.log('Комментарий успешно удален.');
+                    } else {
+                        console.error('Не удалось найти родительский элемент комментария.');
+                    }
+                },
+                error: function (error) {
+                    console.error('Произошла ошибка при удалении комментария.');
+                }
+            });
+        }
+    }
+</script>
