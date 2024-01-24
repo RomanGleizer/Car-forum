@@ -1,0 +1,164 @@
+﻿@model Tuple<IEnumerable<Comment>, User, Review>
+
+@{
+    var currentUser = Model.Item2;
+    var review = Model.Item3;
+}
+
+<ul class="comment-list">
+    @foreach (var comment in Model.Item1)
+    {
+        <li>
+            <div class="comment-content">
+                <div class="comment-text">
+                    <strong class="comment-author">
+                        @comment.Author.FirstName @comment.Author.LastName @(comment.PublishTime.ToShortTimeString() ?? "")
+                    </strong>
+                    <textarea class="comment-edit" id="editCommentText_@comment.Id" rows="6" style="display: none; width: 100%;">@comment.Text</textarea>
+                    <span id="commentText_@comment.Id" class="comment-display">@comment.Text</span>
+                    <button class="apply-edit" data-comment-id="@comment.Id" style="display: none;" onclick="applyEdit(this)">Применить изменения</button>
+                </div>
+                @if (review.Author.Id != currentUser.Id)
+                {
+                    <div class="comment-options">
+                        <button class="edit-comment" data-comment-id="@comment.Id">Редактировать</button>
+                        <button id="delete-comment" class="delete-comment" data-comment-id="@comment.Id" onclick="deleteComment(this)">Удалить</button>
+                    </div>
+                }
+                <div class="comment-like">
+                    <form id="likeForm" data-comment-id="@comment.Id">
+                        <button type="button" class="like-button @(comment.LikedByUsers.Contains(currentUser) ? "liked" : "not-liked")" data-liked="@(comment.LikedByUsers.Contains(currentUser) ? "true" : "false")" onclick="likeComment(this)">Нравится</button>
+                        <span class="like-count">@comment.LikesAmount</span>
+                    </form>
+                </div>
+            </div>
+        </li>
+    }
+</ul>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function likeComment(button) {
+        var commentId = $("#likeForm").data("comment-id");
+
+        $.ajax({
+            type: "POST",
+            url: "/api/Comment/LikeComment/" + commentId,
+            success: function (result) {
+                $("#likeForm .like-count").text(result.likesAmount);
+
+                var isLiked = result.isLikedByCurrentUser;
+                button.setAttribute("data-liked", isLiked.toString());
+                updateButtonStyle(button);
+            },
+            error: function () {
+                alert("Ошибка при отправке запроса.");
+            }
+        });
+    }
+
+    function updateButtonStyle(button) {
+        var isLiked = button.getAttribute("data-liked") === "true";
+        $(button).toggleClass("liked", isLiked);
+        $(button).toggleClass("not-liked", !isLiked);
+    }
+
+    $(document).ready(function () {
+        $(".like-button").each(function () {
+            updateButtonStyle(this);
+        });
+    });
+</script>
+<script>
+    $(function () {
+        $("form").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (data) {
+                    $("#commentListContainer").html(data);
+                    $("#newCommentText").val('');
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var commentListContainer = document.getElementById('commentListContainer');
+
+        commentListContainer.addEventListener('click', function (event) {
+            var target = event.target;
+
+            if (target.classList.contains('edit-comment')) {
+                var commentId = target.getAttribute('data-comment-id');
+                var commentTextDisplay = document.getElementById('commentText_' + commentId);
+                var commentTextEdit = document.getElementById('editCommentText_' + commentId);
+                var applyButton = document.querySelector('.apply-edit[data-comment-id="' + commentId + '"]');
+
+                commentTextEdit.value = commentTextDisplay.textContent;
+
+                commentTextDisplay.style.display = 'none';
+                commentTextEdit.style.display = 'block';
+
+                applyButton.style.display = 'inline-block';
+            }
+        });
+    });
+
+    function applyEdit(button) {
+        var commentId = button.getAttribute('data-comment-id');
+        var commentTextEdit = document.getElementById('editCommentText_' + commentId);
+
+        var editedText = commentTextEdit.value;
+        var apiUrl = '/api/Comment/EditComment/' + commentId;
+
+        $.ajax({
+            type: 'PUT',
+            url: apiUrl,
+            contentType: 'application/json',
+            data: JSON.stringify({ Text: editedText }),
+            success: function (updatedComment) {
+                var commentDisplay = document.getElementById('commentText_' + commentId);
+
+                commentDisplay.textContent = updatedComment.text;
+                commentTextEdit.style.display = 'none';
+                button.style.display = 'none';
+                commentDisplay.style.display = 'inline-block';
+            },
+            error: function (error) {
+                console.error('Произошла ошибка при редактировании комментария.');
+            }
+        });
+    }
+</script>
+<script>
+    function deleteComment(button) {
+        var commentId = button.getAttribute('data-comment-id');
+        var apiUrl = '/api/Comment/DeleteComment/' + commentId;
+
+        if (confirm('Вы уверены, что хотите удалить этот комментарий?')) {
+            $.ajax({
+                type: 'DELETE',
+                url: apiUrl,
+                success: function () {
+                    var commentContainer = button.closest('.comment-content');
+                    if (commentContainer) {
+                        commentContainer.parentElement.remove();
+                        console.log('Комментарий успешно удален.');
+                    } else {
+                        console.error('Не удалось найти родительский элемент комментария.');
+                    }
+                },
+                error: function (error) {
+                    console.error('Произошла ошибка при удалении комментария.');
+                }
+            });
+        }
+    }
+</script>

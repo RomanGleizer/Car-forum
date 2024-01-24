@@ -42,7 +42,13 @@ public class CommentController(ApplicationDbContext context, UserManager<User> u
 
         review.Comments.Add(comment);
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index", "Home");
+
+        var updatedReview = await _context.Reviews
+               .Include(r => r.Comments)
+               .Include(r => r.Author)
+               .FirstOrDefaultAsync(r => r.Id == model.Id);
+
+        return PartialView("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)review.Comments, currentUser, updatedReview));
     }
 
     [HttpPost("LikeComment/{commentId}")]
