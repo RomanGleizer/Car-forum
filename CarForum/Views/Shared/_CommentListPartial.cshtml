@@ -72,7 +72,7 @@
 </script>
 <script>
     $(function () {
-        $("form").submit(function (e) {
+        $(".comment-list").on("submit", ".add-comment-section form", function (e) {
             e.preventDefault();
             var form = $(this);
             $.ajax({
@@ -81,13 +81,12 @@
                 data: form.serialize(),
                 success: function (data) {
                     $("#commentListContainer").html(data);
-                    $("#newCommentText").val('');
+                    form.find("#newCommentText").val('');
                 }
             });
         });
     });
 </script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var commentListContainer = document.getElementById('commentListContainer');

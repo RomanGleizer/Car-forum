@@ -38,7 +38,7 @@
                     {
                         <div class="add-comment-section">
                             <h4>Добавить комментарий:</h4>
-                            <form asp-action="AddComment" asp-controller="Comment">
+                            <form id="addCommentForm" asp-action="AddComment" asp-controller="Comment">
                                 <input type="hidden" name="id" value="@review.Id" />
                                 <textarea name="text" id="newCommentText" rows="3" required></textarea>
                                 <button class="add-comment" type="submit">Добавить</button>
@@ -59,3 +59,20 @@
         }
     </ul>
 </div>
+<script>
+    $(function () {
+        $("#addCommentForm").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (data) {
+                    $("#commentListContainer").html(data);
+                    form.find("#newCommentText").val('');
+                }
+            });
+        });
+    });
+</script>
