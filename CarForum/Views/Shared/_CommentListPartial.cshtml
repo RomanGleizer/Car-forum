@@ -26,8 +26,8 @@
                     </div>
                 }
                 <div class="comment-like">
-                    <form id="likeForm" data-comment-id="@comment.Id">
-                        <button type="button" class="like-button @(comment.LikedByUsers.Contains(currentUser) ? "liked" : "not-liked")" data-liked="@(comment.LikedByUsers.Contains(currentUser) ? "true" : "false")" onclick="likeComment(this)">Нравится</button>
+                    <form class="like-form" data-comment-id="@comment.Id">
+                        <button type="button" class="like-button @(comment.LikedByUserIds.IndexOf(currentUser.Id) != -1 ? "liked" : "not-liked")" data-liked="@(comment.LikedByUserIds.IndexOf(currentUser.Id) != -1 ? "true" : "false")" onclick="likeComment(this)">Нравится</button>
                         <span class="like-count">@comment.LikesAmount</span>
                     </form>
                 </div>
@@ -36,17 +36,16 @@
     }
 </ul>
 
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     function likeComment(button) {
-        var commentId = $("#likeForm").data("comment-id");
+        var commentId = $(button).closest(".like-form").data("comment-id");
 
         $.ajax({
             type: "POST",
             url: "/api/Comment/LikeComment/" + commentId,
             success: function (result) {
-                $("#likeForm .like-count").text(result.likesAmount);
+                $(button).siblings(".like-count").text(result.likesAmount);
 
                 var isLiked = result.isLikedByCurrentUser;
                 button.setAttribute("data-liked", isLiked.toString());

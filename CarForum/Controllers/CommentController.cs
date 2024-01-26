@@ -4,7 +4,7 @@ using CarForum.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.Design;
+using System.Linq;
 
 namespace CarForum.Controllers;
 
@@ -60,21 +60,25 @@ public class CommentController(ApplicationDbContext context, UserManager<User> u
         var comment = await GetCommentByIdAsync(commentId);
         if (comment is null) return NotFound();
 
-        if (!comment.LikedByUsers.Any(u => u.Id == currentUser.Id))
+        var userId = currentUser.Id;
+        var isLikedByCurrentUser = comment.LikedByUserIds.Contains(userId);
+
+        if (!isLikedByCurrentUser)
         {
-            comment.LikedByUsers.Add(currentUser);
+            comment.LikedByUserIds.Add(userId);
             comment.LikesAmount++;
         }
         else
         {
-            comment.LikedByUsers.Remove(currentUser);
+            comment.LikedByUserIds.Remove(userId);
             comment.LikesAmount--;
         }
 
         await _context.SaveChangesAsync();
 
-        return Json(new { likesAmount = comment.LikesAmount, isLikedByCurrentUser = comment.LikedByUsers.Contains(currentUser) });
+        return Json(new { likesAmount = comment.LikesAmount, isLikedByCurrentUser = !isLikedByCurrentUser });
     }
+
 
     [HttpPut("EditComment/{commentId}")]
     public async Task<IActionResult> EditComment(int commentId, [FromBody] EditCommentViewModel model)
@@ -102,13 +106,8 @@ public class CommentController(ApplicationDbContext context, UserManager<User> u
 
     private async Task<Comment> GetCommentByIdAsync(int id)
     {
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser is null) return null;
-
         var comment = await _context.Comments
-            .Include(c => c.LikedByUsers)
             .FirstOrDefaultAsync(c => c.Id == id);
-
         return comment;
     }
 }

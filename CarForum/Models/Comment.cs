@@ -16,5 +16,5 @@ public class Comment
 
     public DateTime PublishTime { get; set; }
 
-    public List<User> LikedByUsers { get; set; } = new List<User>();
+    public List<string> LikedByUserIds { get; set; } = new List<string>();
 }
