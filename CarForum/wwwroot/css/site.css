@@ -303,6 +303,14 @@ select {
     border-radius: 4px;
 }
 
+.register-date-select {
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 auto;
+}
+
 .register-span,
 .edit-span {
     color: #dc3545;
@@ -1182,4 +1190,17 @@ review-edit,
 
 .apply-edit:hover {
     background-color: #45a049;
+}
+
+.birthday {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-group-date {
+    margin-right: 10px;
+    margin-bottom: 20px;
 }

@@ -5,6 +5,7 @@ using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace CarForum.Controllers;
 
@@ -79,10 +80,13 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
-
         var user = _mapper.Map<User>(model);
-        var result = await _userManager.CreateAsync(user, model.Password);
 
+        var russianCulture = new CultureInfo("ru-RU");
+        int monthValue = DateTime.ParseExact(model.Month, "MMMM", russianCulture).Month;
+        user.BirthDay = new DateTime(model.Year, monthValue, model.Day);
+
+        var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
             await _signInManager.SignInAsync(user, false);

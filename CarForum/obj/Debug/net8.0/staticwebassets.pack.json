@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\js\\brands.json"
     },
     {
+      "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\dates.json",
+      "PackagePath": "staticwebassets\\js\\dates.json"
+    },
+    {
       "Id": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\drive_types.json",
       "PackagePath": "staticwebassets\\js\\drive_types.json"
     },

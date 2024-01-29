@@ -57,15 +57,27 @@
             <span class="register-span" asp-validation-for="City"></span>
         </div>
 
-        <div class="form-group">
-            <label class="register-label" asp-for="BirthDay">День Рождения</label>
-            <input class="register-input" asp-for="BirthDay" type="date"/>
-            <span class="register-span" asp-validation-for="BirthDay"></span>
+        <div class="birthday">
+            <div class="form-group-date">
+                <label class="register-label" asp-for="Day">День</label>
+                <select id="day" class="register-date-select" asp-for="Day" type="number"></select>
+                <span class="register-span" asp-validation-for="Day"></span>
+            </div>
+            <div class="form-group-date">
+                <label class="register-label" asp-for="Month">Месяц</label>
+                <select id="month" class="register-date-select" asp-for="Month"></select>
+                <span class="register-span" asp-validation-for="Month"></span>
+            </div>
+            <div class="form-group-date">
+                <label class="register-label" asp-for="Year">Год</label>
+                <select id="year" class="register-date-select" asp-for="Year" type="number"></select>
+                <span class="register-span" asp-validation-for="Year"></span>
+            </div>
         </div>
 
         <div class="form-group">
             <label class="register-label" asp-for="DrivingExperienceYears">Опыт вождения (в годах)</label>
-            <input class="register-input" asp-for="DrivingExperienceYears"/>
+            <input class="register-input" asp-for="DrivingExperienceYears" type="number"/>
             <span class="register-span" asp-validation-for="DrivingExperienceYears"></span>
         </div>
 
@@ -74,3 +86,81 @@
         </div>
     </form>
 </div>
+
+<script>
+    function loadJSON(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.overrideMimeType("application/json");
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(JSON.parse(xhr.responseText));
+            }
+        };
+        xhr.send(null);
+    }
+
+    loadJSON('/js/dates.json', function (data) {
+        fillDropdown("day", data.numericDays);
+        fillDropdown("month", data.months);
+        fillDropdown("year", data.years);
+    });
+
+    function fillDropdown(selectId, data) {
+        const select = document.getElementById(selectId);
+
+        if (select) {
+            const dataArray = Array.isArray(data) ? data : Object.values(data);
+
+            dataArray.forEach(item => {
+                const option = document.createElement("option");
+                option.value = item;
+                option.text = item;
+
+                if (selectId === "day") {
+                    const maxDays = getMaxDaysForMonth(item);
+                    option.setAttribute("data-max-days", maxDays);
+                }
+
+                select.add(option);
+            });
+        }
+    }
+
+    function getMaxDaysForMonth(month) {
+        const daysInMonth = {
+            "Январь": 31,
+            "Февраль": 28,
+            "Март": 31,
+            "Апрель": 30,
+            "Май": 31,
+            "Июнь": 30,
+            "Июль": 31,
+            "Август": 31,
+            "Сентябрь": 30,
+            "Октябрь": 31,
+            "Ноябрь": 30,
+            "Декабрь": 31
+        };
+
+        return daysInMonth[month] || 0;
+    }
+
+    const monthSelect = document.getElementById("month");
+    const daySelect = document.getElementById("day");
+
+    if (monthSelect && daySelect) {
+        monthSelect.addEventListener("change", function () {
+            const selectedMonth = monthSelect.value;
+            const maxDays = getMaxDaysForMonth(selectedMonth);
+
+            daySelect.innerHTML = "";
+            for (let i = 1; i <= maxDays; i++) {
+                const option = document.createElement("option");
+                option.value = i;
+                option.text = i;
+                daySelect.add(option);
+            }
+        });
+    }
+</script>

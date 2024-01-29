@@ -46,10 +46,17 @@ public class RegisterViewModel
     [Display(Name = "Город", Prompt = "Введите ваш город")]
     public string? City { get; set; }
 
-    [Required(ErrorMessage = "Поле День Рождения обязательно для заполнения")]
-    [DataType(DataType.DateTime)]
-    [Display(Name = "День Рождения", Prompt = "Введите ваш день рождения")]
-    public DateTime BirthDay { get; set; }
+    [Required(ErrorMessage = "Поле День обязательно для заполнения")]
+    [Display(Name = "День", Prompt = "День")]
+    public int Day { get; set; }
+
+    [Required(ErrorMessage = "Поле Месяц обязательно для заполнения")]
+    [Display(Name = "Месяц", Prompt = "Месяц")]
+    public string Month { get; set; }
+
+    [Required(ErrorMessage = "Поле Год обязательно для заполнения")]
+    [Display(Name = "Год", Prompt = "Год")]
+    public int Year { get; set; }
 
     [Required(ErrorMessage = "Поле Опыт вождения обязательно для заполнения")]
     [DataType(DataType.Text)]

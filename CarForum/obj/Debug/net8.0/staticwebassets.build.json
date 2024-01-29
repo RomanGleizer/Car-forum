@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "JJ2adJ+oa0QHWldUG5ZOxIIohWzgb5p6436M7L0iS64=",
+  "Hash": "Rs8cAJLzz3vzictZ6gs14YFx6Sj2ZLU3e65BQ5L55/A=",
   "Source": "CarForum",
   "BasePath": "_content/CarForum",
   "Mode": "Default",
@@ -129,6 +129,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\brands.json"
+    },
+    {
+      "Identity": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\dates.json",
+      "SourceId": "CarForum",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\",
+      "BasePath": "_content/CarForum",
+      "RelativePath": "js/dates.json",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\dates.json"
     },
     {
       "Identity": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\js\\drive_types.json",
