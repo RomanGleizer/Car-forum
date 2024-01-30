@@ -1,6 +1,8 @@
 ﻿@model CarForum.Models.Review
-
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CarForum.Models.User> UserManager
 @{
+    var currentUser = await UserManager.GetUserAsync(User);
     ViewData["Title"] = "Подробности отзыва";
 }
 
@@ -30,10 +32,47 @@
     }
     <div class="options">
         <a href="javascript:history.back()" class="more-info">Назад</a>
-        @if (ViewBag.CurrentUser.Id == Model.AuthorId)
+        @if (currentUser.Id == Model.AuthorId)
         {
             <a asp-action="EditReview" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Редактировать</a>
             <a asp-action="Delete" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Удалить</a>
         }
     </div>
+
+    <div class="comments-section">
+
+        @if (Model.Author.Id != currentUser.Id)
+        {
+            <div class="add-comment-section">
+                <h4>Добавить комментарий:</h4>
+                <form id="addCommentForm" asp-action="AddComment" asp-controller="Comment">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <textarea name="text" id="newCommentText" rows="3" required></textarea>
+                    <button class="add-comment" type="submit">Добавить</button>
+                </form>
+            </div>
+        }
+
+        <h4>Комментарии:</h4>
+        <div id="commentListContainer">
+            @await Html.PartialAsync("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)Model.Comments, (User)currentUser, (Review)Model))
+        </div>
+    </div>
 </div>
+<script>
+    $(function () {
+        $("#addCommentForm").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (data) {
+                    $("#commentListContainer").html(data);
+                    form.find("#newCommentText").val('');
+                }
+            });
+        });
+    });
+</script>

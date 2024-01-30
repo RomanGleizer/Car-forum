@@ -18,34 +18,42 @@
     }
 }
 
-<div class="favorite-reviews-container">
-    <h4 class="favorite-reviews-title">Избранные отзывы</h4>
+@if (reviews.Count > 0)
+{
+    <div class="favorite-reviews-container">
+        <h4 class="favorite-reviews-title">Избранные отзывы</h4>
 
-    <ul class="favorite-reviews">
-        @foreach (var review in reviews)
-        {
-            <li class="favorite-review">
-                <strong>@review.Title</strong>
-                <p>Рейтинг: @review.Rating</p>
-                <p>Автомобиль: @review.CarBrand @review.CarModel</p>
-                <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
-                <div class="user-profile-options">
-                    @if (currentUser.FavoriteReviewByIds is not null)
+        <ul class="favorite-reviews">
+            @foreach (var review in reviews)
+            {
+                <li class="favorite-review">
+                    <strong>@review.Title</strong>
+                    <p>Рейтинг: @review.Rating</p>
+                    <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                    <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                    <div class="user-profile-options">
+                        @if (currentUser.FavoriteReviewByIds is not null)
+                        {
+                            var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
+                            <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
+                            onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                        }
+                        <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                    </div>
+                    @if (!string.IsNullOrEmpty(review.PhotoPath))
                     {
-                        var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
-                        <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
-                           onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
                     }
-                    <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
-                </div>
-                @if (!string.IsNullOrEmpty(review.PhotoPath))
-                {
-                    <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
-                }
-            </li>
-        }
-    </ul>
-</div>
+                </li>
+            }
+        </ul>
+    </div>
+}
+else
+{   <div class="favorite-reviews-container">
+        <h4 class="favorite-reviews-title">Здесь пока что пусто.</h4>
+    </div>
+}
 
 <script>
     function addToFavorites(id) {

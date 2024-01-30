@@ -255,6 +255,8 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     {
         var user = await _userManager.GetUserAsync(User);
         return await _context.Reviews
+            .Include(r => r.Comments)
+            .Include(r => r.Author)
             .Where(r => r.Id == id)
             .FirstOrDefaultAsync();
     }
