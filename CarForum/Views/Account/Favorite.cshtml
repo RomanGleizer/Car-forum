@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<CarForum.Models.User> UserManager
+@inject CarForum.Database.ApplicationDbContext _context
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var reviews = new List<Review>();
+
+    if (currentUser is not null)
+    {
+        currentUser.Reviews = _context.Reviews.Where(r => r.Author.Id == currentUser.Id).ToList();
+    }
+
+    foreach (var id in currentUser.FavoriteReviewByIds)
+    {
+        foreach (var review in currentUser.Reviews)
+            if (review.Id == id) reviews.Add(review);
+    }
+}
+
+<div class="favorite-reviews-container">
+    <h4 class="favorite-reviews-title">Избранные отзывы</h4>
+
+    <ul class="favorite-reviews">
+        @foreach (var review in reviews)
+        {
+            <li class="favorite-review">
+                <strong>@review.Title</strong>
+                <p>Рейтинг: @review.Rating</p>
+                <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                <div class="user-profile-options">
+                    @if (currentUser.FavoriteReviewByIds is not null)
+                    {
+                        var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
+                        <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
+                           onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                    }
+                    <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                </div>
+                @if (!string.IsNullOrEmpty(review.PhotoPath))
+                {
+                    <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
+                }
+            </li>
+        }
+    </ul>
+</div>
+
+<script>
+    function addToFavorites(id) {
+        $.ajax({
+            url: '/api/Review/AddInFavorite/' + id,
+            type: "POST",
+            success: function (data) {
+                var addToFavoritesButton = $("#addToFavoritesButton");
+
+                if (data.isAddedInUserFavorites) {
+                    addToFavoritesButton.removeClass("not-added").addClass("is-added").text("В избранном");
+                } else {
+                    addToFavoritesButton.removeClass("is-added").addClass("not-added").text("В избранное");
+                }
+            }
+        });
+    }
+
+</script>
+
+
+<style>
+    #addToFavoritesButton.is-added {
+        background-color: #2980b9 !important;
+    }
+
+    #addToFavoritesButton.not-added {
+        background-color: #3498db !important;
+    }
+</style>

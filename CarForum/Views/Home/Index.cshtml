@@ -25,6 +25,12 @@
                 <p>Автомобиль: @(review.CarBrand ?? "") @(review.CarModel ?? "")</p>
                 <p>Опубликовано: @(review.PublishTime?.ToShortDateString() ?? "")</p>
                 <div class="options">
+                    @if (currentUser.FavoriteReviewByIds is not null)
+                    {
+                        var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
+                        <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
+                           onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                    }
                     <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
                 </div>
                 @if (!string.IsNullOrEmpty(review.PhotoPath))
@@ -76,3 +82,39 @@
         });
     });
 </script>
+<script>
+    function addToFavorites(id) {
+        $.ajax({
+            url: '@Url.Content("~/api/Review/AddInFavorite/")' + id,
+            type: "POST",
+            success: function (data) {
+                var addToFavoritesButton = $("#addToFavoritesButton");
+
+                if (data.isAddedInUserFavorites) {
+                    addToFavoritesButton.removeClass("not-added").addClass("is-added").text("В избранном");
+                } else {
+                    addToFavoritesButton.removeClass("is-added").addClass("not-added").text("В избранное");
+                }
+            }
+        });
+    }
+</script>
+<style>
+    #addToFavoritesButton {
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        color: #fff !important;
+        border-radius: 5px;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    #addToFavoritesButton.is-added {
+        background-color: #2980b9 !important;
+    }
+
+    #addToFavoritesButton.not-added {
+        background-color: #3498db !important;
+    }
+</style>

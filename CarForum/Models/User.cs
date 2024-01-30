@@ -26,4 +26,6 @@ public class User : IdentityUser
     public List<Review> Reviews { get; set; } = new List<Review>();
 
     public List<DeletedReviewViewModel> DeletedReviews { get; set; } = new List<DeletedReviewViewModel>();
+
+    public List<int> FavoriteReviewByIds { get; set; } = new List<int>();
 }

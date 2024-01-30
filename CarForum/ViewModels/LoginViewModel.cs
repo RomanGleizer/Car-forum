@@ -6,7 +6,7 @@ public class LoginViewModel
 {
     [Required]
     [EmailAddress]
-    [Display(Name = "Логин", Prompt = "Введите логин")]
+    [Display(Name = "Email", Prompt = "Введите email")]
     public string? UserName { get; set; }
 
     [Required]

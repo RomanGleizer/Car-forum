@@ -23,6 +23,7 @@ public class HomeController(ApplicationDbContext context, UserManager<User> user
         var randomReview = _context.Reviews
                 .Include(r => r.Author)
                 .Include(r => r.Comments)
+                .Include(r => r.Comments)
                     .ThenInclude(c => c.Author)
                 .OrderBy(r => Guid.NewGuid())
                 .Take(1)

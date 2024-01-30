@@ -212,6 +212,27 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         return View("Search");
     }
 
+    [HttpPost("AddInFavorite/{id}")]
+    public async Task<IActionResult> AddInFavorite(int id)
+    {
+        var review = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+        if (review is null) return NotFound(review);
+
+        var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser is null) return NotFound(currentUser);
+
+        if (!currentUser.FavoriteReviewByIds.Contains(review.Id))
+        {
+            currentUser.FavoriteReviewByIds.Add(review.Id);
+            await _context.SaveChangesAsync();
+            return Json(new { isAddedInUserFavorites = true });
+        }
+
+        currentUser.FavoriteReviewByIds.Remove(review.Id);
+        await _context.SaveChangesAsync();
+        return Json(new { isAddedInUserFavorites = false });
+    }
+
     private string SaveImage(IFormFile photo)
     {
         if (photo != null && photo.Length > 0)
@@ -282,5 +303,4 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         await _context.SaveChangesAsync();
         return RedirectToAction("UserProfile", "Account");
     }
-
 }

@@ -29,7 +29,7 @@
         </div>
     }
     <div class="options">
-        <a asp-action="UserProfile" asp-controller="Account" class="more-info">Назад</a>
+        <a href="javascript:history.back()" class="more-info">Назад</a>
         @if (ViewBag.CurrentUser.Id == Model.AuthorId)
         {
             <a asp-action="EditReview" asp-controller="Review" asp-route-id="@Model.Id" class="review-edit">Редактировать</a>

@@ -30,6 +30,13 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
         return View();
     }
 
+    [Authorize]
+    [HttpGet("Favorite")]
+    public IActionResult Favorite()
+    {
+        return View();
+    }
+
     [HttpGet("ResetPassword")]
     public IActionResult ResetPassword()
     {
