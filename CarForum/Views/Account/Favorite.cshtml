@@ -13,39 +13,60 @@
 
     foreach (var id in currentUser.FavoriteReviewByIds)
     {
-        foreach (var review in currentUser.Reviews)
+        foreach (var review in ViewBag.Reviews)
             if (review.Id == id) reviews.Add(review);
     }
 }
 
 @if (reviews.Count > 0)
 {
-    <div class="favorite-reviews-container">
+    <div class="random-cars">
         <h4 class="favorite-reviews-title">Избранные отзывы</h4>
 
-        <ul class="favorite-reviews">
+        <ul class="random-cars-revies" id="userReviewsList">
             @foreach (var review in reviews)
-            {
-                <li class="favorite-review">
-                    <strong>@review.Title</strong>
-                    <p>Рейтинг: @review.Rating</p>
-                    <p>Автомобиль: @review.CarBrand @review.CarModel</p>
-                    <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
-                    <div class="user-profile-options">
-                        @if (currentUser.FavoriteReviewByIds is not null)
+                {
+                    <li>
+                        <strong>@review.Title</strong>
+                        <p>Рейтинг: @review.Rating</p>
+                        <p>Автомобиль: @review.CarBrand @review.CarModel</p>
+                        <p>Опубликовано: @review.PublishTime.ToShortDateString()</p>
+                        <div class="user-profile-options">
+                            @if (currentUser.FavoriteReviewByIds is not null)
+                            {
+                                var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
+                                <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
+                                   onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                            }
+                            <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(review.PhotoPath))
                         {
-                            var result = currentUser.FavoriteReviewByIds.Contains(@review.Id);
-                            <a href="#" id="addToFavoritesButton" class="more-info @(result ? "is-added" : "not-added")"
-                            onclick="addToFavorites(@review.Id)">@(result ? "В избранном" : "В избранное")</a>
+                            <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
                         }
-                        <a asp-action="Details" asp-controller="Review" asp-route-id="@review.Id" class="more-info">Подробнее</a>
-                    </div>
-                    @if (!string.IsNullOrEmpty(review.PhotoPath))
-                    {
-                        <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
-                    }
-                </li>
-            }
+
+                        <div class="comments-section">
+
+                            @if (review.Author.Id != currentUser.Id)
+                            {
+                                <div class="add-comment-section">
+                                    <h4>Добавить комментарий:</h4>
+                                    <form id="addCommentForm" asp-action="AddComment" asp-controller="Comment">
+                                        <input type="hidden" name="id" value="@review.Id" />
+                                        <textarea name="text" id="newCommentText" rows="3" required></textarea>
+                                        <button class="add-comment" type="submit">Добавить</button>
+                                    </form>
+                                </div>
+                            }
+
+                            <h4>Комментарии:</h4>
+                            <div id="commentListContainer">
+                                @await Html.PartialAsync("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)review.Comments, (User)currentUser, (Review)review))
+                            </div>
+                        </div>
+                    </li>
+                }
         </ul>
     </div>
 }
@@ -56,25 +77,22 @@ else
 }
 
 <script>
-    function addToFavorites(id) {
-        $.ajax({
-            url: '/api/Review/AddInFavorite/' + id,
-            type: "POST",
-            success: function (data) {
-                var addToFavoritesButton = $("#addToFavoritesButton");
-
-                if (data.isAddedInUserFavorites) {
-                    addToFavoritesButton.removeClass("not-added").addClass("is-added").text("В избранном");
-                } else {
-                    addToFavoritesButton.removeClass("is-added").addClass("not-added").text("В избранное");
+    $(function () {
+        $("#addCommentForm").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (data) {
+                    $("#commentListContainer").html(data);
+                    form.find("#newCommentText").val('');
                 }
-            }
+            });
         });
-    }
-
+    });
 </script>
-
-
 <style>
     #addToFavoritesButton.is-added {
         background-color: #2980b9 !important;

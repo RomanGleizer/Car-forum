@@ -5,6 +5,7 @@ using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 namespace CarForum.Controllers;
@@ -34,6 +35,10 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     [HttpGet("Favorite")]
     public IActionResult Favorite()
     {
+        ViewBag.Reviews = _context.Reviews
+            .Include(c => c.Author)
+            .Include(c => c.Comments).ToList();
+
         return View();
     }
 

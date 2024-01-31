@@ -12,9 +12,8 @@
             <div class="comment-content">
                 <div class="comment-text">
                     <strong class="comment-author">
-                        @comment.Author.FirstName @comment.Author.LastName @(comment.PublishTime.ToShortTimeString() ?? "")
+                        @comment.Author.FirstName @comment.Author.LastName @comment.PublishTime.ToShortTimeString() @comment.PublishTime.ToShortDateString() 
                     </strong>
-                    <br />
                     <textarea class="comment-edit" id="editCommentText_@comment.Id" rows="6" style="display: none; width: 100%;">@comment.Text</textarea>
                     <span id="commentText_@comment.Id" class="comment-display">@comment.Text</span>
                     <button class="apply-edit" data-comment-id="@comment.Id" style="display: none;" onclick="applyEdit(this)">Применить изменения</button>
