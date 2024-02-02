@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "mJJ3gAP19iFiW4BZogGAMgSjDaZKK6Gk0ianyESpkjw=",
+  "Hash": "XqwqEbjr8egvHaSn6r4T45dh4b6ivWJvJ1tiT8bVytI=",
   "Source": "CarForum",
   "BasePath": "_content/CarForum",
   "Mode": "Default",
@@ -1459,6 +1459,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\388c4c0b-8e6e-4425-9ff2-16e58285a80f_honda.webp"
+    },
+    {
+      "Identity": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\3b26a395-3707-4c4e-8adc-973de4baa2f3_x5.jpg",
+      "SourceId": "CarForum",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\",
+      "BasePath": "_content/CarForum",
+      "RelativePath": "uploads/3b26a395-3707-4c4e-8adc-973de4baa2f3_x5.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\3b26a395-3707-4c4e-8adc-973de4baa2f3_x5.jpg"
     },
     {
       "Identity": "C:\\Users\\romy4\\source\\repos\\RomanGleizer\\Car-forum\\CarForum\\wwwroot\\uploads\\45c6da39-dc66-4ad4-ada1-6110b99d5b96_tiguan.jpg",

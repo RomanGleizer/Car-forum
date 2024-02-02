@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using CarForum.DAO.AccountData;
 using CarForum.Database;
 using CarForum.Models;
 using CarForum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
@@ -11,13 +11,19 @@ using System.Globalization;
 namespace CarForum.Controllers;
 
 [ApiController]
-[Route("api/{controller}")]
-public class AccountController(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext context) : Controller
+[Route("api/[controller]")]
+public class AccountController : Controller
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly UserManager<User> _userManager = userManager;
-    private readonly SignInManager<User> _signInManager = signInManager;
-    private readonly ApplicationDbContext _context = context;
+    private readonly IAccountRepository _accountRepository;
+    private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _context;
+
+    public AccountController(IAccountRepository accountRepository, IMapper mapper, ApplicationDbContext context)
+    {
+        _accountRepository = accountRepository;
+        _mapper = mapper;
+        _context = context;
+    }
 
     [HttpGet("Login")]
     public IActionResult Login()
@@ -52,7 +58,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     [HttpGet("UserProfile")]
     public async Task<IActionResult> UserProfile()
     {
-        var currentUser = await _userManager.GetUserAsync(User);
+        var currentUser = await _accountRepository.GetUserAsync(User.Identity.Name);
 
         if (currentUser is not null)
         {
@@ -67,7 +73,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     [HttpGet("EditProfile")]
     public async Task<IActionResult> EditProfile()
     {
-        var currentUser = await _userManager.GetUserAsync(User);
+        var currentUser = await _accountRepository.GetUserAsync(User.Identity.Name);
         var model = _mapper.Map<EditProfileViewModel>(currentUser);
 
         return View(model);
@@ -79,10 +85,9 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     {
         if (!ModelState.IsValid) return View(model);
 
-        var user = _mapper.Map<User>(model);
-        var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
+        var result = await _accountRepository.SignInAsync(model.UserName, model.Password, model.RememberMe);
 
-        if (result.Succeeded)
+        if (result)
             return RedirectToAction("UserProfile", "Account");
 
         return View(model);
@@ -92,21 +97,20 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     public async Task<IActionResult> Register([FromForm] RegisterViewModel model)
     {
         if (!ModelState.IsValid) return View(model);
+
         var user = _mapper.Map<User>(model);
 
         var russianCulture = new CultureInfo("ru-RU");
         int monthValue = DateTime.ParseExact(model.Month, "MMMM", russianCulture).Month;
         user.BirthDay = new DateTime(model.Year, monthValue, model.Day);
 
-        var result = await _userManager.CreateAsync(user, model.Password);
-        if (result.Succeeded)
+        var result = await _accountRepository.CreateUserAsync(user, model.Password);
+
+        if (result)
         {
-            await _signInManager.SignInAsync(user, false);
+            await _accountRepository.SignInAsync(user.UserName, model.Password, rememberMe: false);
             return RedirectToAction("UserProfile", "Account");
         }
-        
-        foreach (var error in result.Errors)
-            ModelState.AddModelError(string.Empty, error.Description);
 
         return View(model);
     }
@@ -116,17 +120,14 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     {
         if (!ModelState.IsValid) return View(model);
 
-        var user = await _userManager.GetUserAsync(User);
-        if (user is null) return NotFound();
+        var currentUser = await _accountRepository.GetUserAsync(User.Identity.Name);
+        if (currentUser is null) return NotFound();
 
-        _mapper.Map(model, user);
-        var result = await _userManager.UpdateAsync(user);
+        _mapper.Map(model, currentUser);
+        var result = await _accountRepository.UpdateUserAsync(currentUser);
 
-        if (result.Succeeded)
+        if (result)
             return RedirectToAction("UserProfile", "Account");
-        
-        foreach (var error in result.Errors)
-            ModelState.AddModelError(string.Empty, error.Description);
 
         return View(model);
     }
@@ -135,7 +136,7 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        await _signInManager.SignOutAsync();
+        await _accountRepository.SignOutAsync();
         return RedirectToAction("Login", "Account");
     }
 
@@ -146,17 +147,15 @@ public class AccountController(IMapper mapper, UserManager<User> userManager, Si
         if (!ModelState.IsValid)
             return View(model);
 
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        var user = await _accountRepository.GetUserByEmailAsync(model.Email);
+
         if (user is null)
             return View(model);
 
-        var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+        var result = await _accountRepository.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
-        if (result.Succeeded)
-            return View("Login", "Account");
-
-        foreach (var error in result.Errors)
-            ModelState.AddModelError(string.Empty, error.Description);
+        if (result)
+            return RedirectToAction("Login", "Account");
 
         return View(model);
     }

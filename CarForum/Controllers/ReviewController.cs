@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarForum.DAO.ReviewData;
 using CarForum.Database;
 using CarForum.Extentions;
 using CarForum.Models;
@@ -12,12 +13,18 @@ namespace CarForum.Controllers;
 
 [ApiController]
 [Route("api/{controller}")]
-public class ReviewController(IMapper mapper, ApplicationDbContext context, UserManager<User> userManager, IWebHostEnvironment hostEnvironment) : Controller
+public class ReviewController(
+    IMapper mapper, 
+    ApplicationDbContext context, 
+    UserManager<User> userManager, 
+    IWebHostEnvironment hostEnvironment,
+    IReviewRepository reviewRepository) : Controller
 {
     private readonly IMapper _mapper = mapper;
     private readonly ApplicationDbContext _context = context;
     private readonly UserManager<User> _userManager = userManager;
     private readonly IWebHostEnvironment _webHostEnvironment = hostEnvironment;
+    private readonly IReviewRepository _reviewRepository = reviewRepository;
 
     [Authorize]
     [HttpGet("CreateReview")]
@@ -30,7 +37,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     [HttpGet("EditReview")]
     public async Task<IActionResult> EditReview(int id)
     {
-        var review = await GetReviewById(id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
         if (review is null) return NotFound("Отзыв не найден");
 
         var model = _mapper.Map<EditReviewViewModel>(review);
@@ -41,7 +48,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     [HttpGet("Details/{id}")]
     public async Task<IActionResult> Details(int id)
     {
-        var review = await GetReviewById(id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
 
         ViewBag.CurrentUser = await _userManager.GetUserAsync(User);
         return ProcessReview(review);
@@ -59,7 +66,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     [HttpGet("DeleteReview/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var review = await GetReviewById(id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
         return ProcessReview(review);
     }
 
@@ -84,9 +91,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
             review.Author = currentUser;
             review.PhotoPath = SaveImage(model.Photo);
 
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-
+            await _reviewRepository.AddReviewAsync(review);
             return RedirectToAction("UserProfile", "Account");
         }
 
@@ -99,10 +104,10 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     {
         if (!ModelState.IsValid) return View(model);
 
-        var review = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
         if (review is not null)
         {
-            var currentUser = _userManager.GetUserAsync(User).Result;
+            var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser is null)
                 return NotFound("Пользователь не найден");
 
@@ -112,18 +117,20 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
                 if (model.Photo is not null)
                     review.PhotoPath = SaveImage(model.Photo);
 
-                await _context.SaveChangesAsync();
+                await _reviewRepository.EditReviewAsync(review);
                 return RedirectToAction("UserProfile", "Account");
             }
         }
-        
+
         ModelState.AddModelError("", "Отзыва не существует");
         return View(model);
     }
 
     [HttpPost("DeleteReview/{id}")]
-    public Task<IActionResult> DeleteReview(int id) =>
-        ManageReview(id, async (review, isDeleted) =>
+    public async Task<IActionResult> DeleteReview(int id)
+    {
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
+        return await ManageReview(id, async (r, isDeleted) =>
         {
             if (!isDeleted)
             {
@@ -149,48 +156,26 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
                     PublishTime = review.PublishTime
                 };
 
-                _context.DeletedReviews.Add(deletedReview);
+                await _reviewRepository.AddDeletedReviewAsync(deletedReview);
             }
-            _context.Reviews.Remove(review);
+            await _reviewRepository.DeleteReviewAsync(r);
         });
+    }
 
     [HttpPost("RestoreReview/{id}")]
-    public Task<IActionResult> RestoreReview(int id) =>
-        ManageReview(id, async (review, isDeleted) =>
+    public async Task<IActionResult> RestoreReview(int id)
+    {
+        return await ManageReview(id, async (review, isDeleted) =>
         {
             if (isDeleted)
             {
-                var deletedReview = await _context.DeletedReviews.FindAsync(id);
+                var deletedReview = await _reviewRepository.GetDeletedReviewByIdAsync(id, review.Author.Id);
 
                 if (deletedReview is not null)
-                {
-                    var restoredReview = new Review
-                    {
-                        Title = deletedReview.Title,
-                        Rating = deletedReview.Rating,
-                        CarBrand = deletedReview.CarBrand,
-                        CarModel = deletedReview.CarModel,
-                        Year = deletedReview.Year,
-                        Mileage = deletedReview.Mileage,
-                        Transmission = deletedReview.Transmission,
-                        Body = deletedReview.Body,
-                        EngineType = deletedReview.EngineType,
-                        EngineCapacity = deletedReview.EngineCapacity,
-                        DriveType = deletedReview.DriveType,
-                        Advantages = deletedReview.Advantages,
-                        Disadvantages = deletedReview.Disadvantages,
-                        OverallExperience = deletedReview.OverallExperience,
-                        AuthorId = deletedReview.AuthorId,
-                        Author = deletedReview.Author,
-                        PhotoPath = deletedReview.PhotoPath,
-                        PublishTime = deletedReview.PublishTime
-                    };
-
-                    _context.Reviews.Add(restoredReview);
-                    _context.DeletedReviews.Remove(deletedReview);
-                }
+                    await _reviewRepository.RestoreReviewAsync(deletedReview);
             }
         });
+    }
 
     [HttpPost("Search")]
     public async Task<IActionResult> Search([FromForm] FindReviewViewModel reviewModel)
@@ -198,15 +183,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         if (!ModelState.IsValid)
             return View(reviewModel);
 
-        var suitableReviews = await _context.Reviews
-            .Where(r =>
-                r.CarBrand == reviewModel.Brand &&
-                r.CarModel == reviewModel.Model &&
-                r.Year == reviewModel.Year &&
-                r.Transmission == reviewModel.Transmission &&
-                r.Body == reviewModel.Body &&
-                r.EngineType == reviewModel.EngineType)
-            .ToListAsync();
+        var suitableReviews = await _reviewRepository.SearchReviewsAsync(reviewModel);
 
         ViewBag.SuitableReviews = suitableReviews;
         return View("Search");
@@ -215,7 +192,7 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
     [HttpPost("AddInFavorite/{id}")]
     public async Task<IActionResult> AddInFavorite(int id)
     {
-        var review = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
         if (review is null) return NotFound(review);
 
         var currentUser = await _userManager.GetUserAsync(User);
@@ -224,14 +201,15 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         if (!currentUser.FavoriteReviewByIds.Contains(review.Id))
         {
             currentUser.FavoriteReviewByIds.Add(review.Id);
-            await _context.SaveChangesAsync();
+            await _userManager.UpdateAsync(currentUser);
             return Json(new { isAddedInUserFavorites = true });
         }
 
         currentUser.FavoriteReviewByIds.Remove(review.Id);
-        await _context.SaveChangesAsync();
+        await _userManager.UpdateAsync(currentUser);
         return Json(new { isAddedInUserFavorites = false });
     }
+
 
     private string SaveImage(IFormFile photo)
     {
@@ -249,16 +227,6 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         }
 
         return null;
-    }
-
-    private async Task<Review?> GetReviewById(int id)
-    {
-        var user = await _userManager.GetUserAsync(User);
-        return await _context.Reviews
-            .Include(r => r.Comments)
-            .Include(r => r.Author)
-            .Where(r => r.Id == id)
-            .FirstOrDefaultAsync();
     }
 
     private async Task<DeletedReviewViewModel?> GetDeletedReviewById(int id)
@@ -285,12 +253,12 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
             return NotFound();
         }
 
-        var review = await _context.Reviews.FindAsync(id);
+        var review = await _reviewRepository.GetReviewByIdAsync(id);
         bool isDeleted = false;
 
         if (review is null)
         {
-            var deletedReview = await _context.DeletedReviews.FindAsync(id);
+            var deletedReview = await _reviewRepository.GetDeletedReviewByIdAsync(id, currentUser.Id);
             if (deletedReview is null)
             {
                 ModelState.AddModelError("", "Отзыва не существует");
@@ -302,7 +270,6 @@ public class ReviewController(IMapper mapper, ApplicationDbContext context, User
         }
 
         await action(review, isDeleted);
-        await _context.SaveChangesAsync();
         return RedirectToAction("UserProfile", "Account");
     }
 }

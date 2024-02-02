@@ -39,7 +39,6 @@
                 }
 
                 <div class="comments-section">
-
                     @if (review.Author.Id != ViewBag.CurrentUser.Id)
                     {
                         <div class="add-comment-section">
@@ -52,10 +51,12 @@
                         </div>
                     }
 
-                    <h4>Комментарии:</h4>
-                    <div id="commentListContainer">
-                        @await Html.PartialAsync("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)review.Comments, (User)currentUser, (Review)review))
-                    </div>
+                    @if (review.Comments.Count > 0)
+                    {
+                        <div id="commentListContainer">
+                            @await Html.PartialAsync("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)review.Comments, (User)currentUser, (Review)review))
+                        </div>
+                    }
                 </div>
             </li>
         }
@@ -75,7 +76,8 @@
                 type: form.attr("method"),
                 data: form.serialize(),
                 success: function (data) {
-                    $("#commentListContainer").html(data);
+                    var commentListContainer = $("#commentListContainer");
+                    commentListContainer.html(data);
                     form.find("#newCommentText").val('');
                 }
             });

@@ -1,7 +1,11 @@
-﻿@model CarForum.ViewModels.FindReviewViewModel
+﻿@using Microsoft.AspNetCore.Identity
+
+@model CarForum.ViewModels.FindReviewViewModel
+@inject UserManager<CarForum.Models.User> UserManager
 
 @{
     ViewBag.Title = "Искать объявления";
+    var currentUser = await UserManager.GetUserAsync(User);
 }
 
 <h2 class="find-cars-title">Поиск объявлений</h2>
@@ -61,10 +65,10 @@
     </div>
 </form>
 
-@if (ViewBag.SuitableReviews is not null && ViewBag.SuitableReviews.Count > 0)
+@if (ViewBag.SuitableReviews is not null && System.Linq.Queryable.Any(ViewBag.SuitableReviews))
 {
-    <div class="user-reviews">
-        <ul id="userReviewsList">
+    <div class="random-cars">
+        <ul class="random-cars-revies" id="userReviewsList">
             @if (ViewBag.SuitableReviews is not null)
             {
                 @foreach (var review in ViewBag.SuitableReviews)
@@ -81,17 +85,55 @@
                         {
                             <img class="car-image" src="@Url.Content(review.PhotoPath)" alt="Фотография авто" />
                         }
+
+                        <div class="comments-section">
+                            @if (review.Author.Id != currentUser.Id)
+                            {
+                                <div class="add-comment-section">
+                                    <h4>Добавить комментарий:</h4>
+                                    <form id="addCommentForm" asp-action="AddComment" asp-controller="Comment">
+                                        <input type="hidden" name="id" value="@review.Id" />
+                                        <textarea name="text" id="newCommentText" rows="3" required></textarea>
+                                        <button class="add-comment" type="submit">Добавить</button>
+                                    </form>
+                                </div>
+                            }
+
+                            @if (review.Comments.Count > 0)
+                            {
+                                <div id="commentListContainer">
+                                    @await Html.PartialAsync("_CommentListPartial", Tuple.Create((IEnumerable<Comment>)review.Comments, (User)currentUser, (Review)review))
+                                </div>
+                            }
+                        </div>
                     </li>
                 }
             }
         </ul>
     </div>
 }
-else if (ViewBag.SuitableReviews is not null && ViewBag.SuitableReviews.Count == 0)
+else if (ViewBag.SuitableReviews is not null && System.Linq.Queryable.Any(ViewBag.SuitableReviews))
 {
     <h2 class="find-cars-title">Ничего не найдено</h2>
 }
-
+<script>
+    $(function () {
+        $("#addCommentForm").submit(function (e) {
+            e.preventDefault();
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                type: form.attr("method"),
+                data: form.serialize(),
+                success: function (data) {
+                    var commentListContainer = $("#commentListContainer");
+                    commentListContainer.html(data);
+                    form.find("#newCommentText").val('');
+                }
+            });
+        });
+    });
+</script>
 <script>
     const brandSelect = document.getElementById("brand");
     const modelSelect = document.getElementById("model");
